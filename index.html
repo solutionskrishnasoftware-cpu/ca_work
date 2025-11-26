@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CA Practice Dashboard</title>
+    <title>Client Management - CA Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
@@ -46,21 +46,74 @@
             min-height: 100vh;
         }
 
+        /* Mobile Menu */
+        .mobile-menu-btn {
+            display: none;
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .mobile-sidebar {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--bg-card);
+            z-index: 1000;
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+            overflow-y: auto;
+        }
+
+        .mobile-sidebar.active {
+            transform: translateX(0);
+        }
+
+        .mobile-sidebar-header {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .close-mobile-menu {
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
         /* Header Styles */
         header {
             grid-area: header;
             background-color: var(--bg-card);
-            padding: 0 2rem;
+            padding: 0 1rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
             box-shadow: 0 4px 6px var(--shadow);
             z-index: 10;
             border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
         }
 
         .header-left h1 {
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             font-weight: 600;
             background: linear-gradient(90deg, var(--primary), var(--secondary));
             -webkit-background-clip: text;
@@ -70,7 +123,7 @@
         .header-right {
             display: flex;
             align-items: center;
-            gap: 1.5rem;
+            gap: 1rem;
         }
 
         .search-bar {
@@ -78,8 +131,8 @@
             align-items: center;
             background: var(--bg-dark);
             border-radius: 8px;
-            padding: 0.5rem 1rem;
-            width: 300px;
+            padding: 0.5rem;
+            min-width: 200px;
         }
 
         .search-bar input {
@@ -87,8 +140,18 @@
             border: none;
             color: var(--text-primary);
             width: 100%;
-            padding: 0.5rem;
+            padding: 0.25rem;
             outline: none;
+            font-size: 0.9rem;
+        }
+
+        .mobile-search-btn {
+            display: none;
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1.2rem;
+            cursor: pointer;
         }
 
         .user-profile {
@@ -99,14 +162,30 @@
         }
 
         .user-avatar {
-            width: 40px;
-            height: 40px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-name {
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .user-role {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
         }
 
         /* Sidebar Styles */
@@ -118,6 +197,7 @@
             flex-direction: column;
             border-right: 1px solid var(--border);
             box-shadow: 4px 0 6px var(--shadow);
+            overflow-y: auto;
         }
 
         .logo {
@@ -129,12 +209,12 @@
         }
 
         .logo i {
-            font-size: 1.75rem;
+            font-size: 1.5rem;
             color: var(--primary);
         }
 
         .logo h2 {
-            font-size: 1.25rem;
+            font-size: 1.1rem;
             font-weight: 600;
         }
 
@@ -156,6 +236,7 @@
             text-decoration: none;
             transition: all 0.3s ease;
             cursor: pointer;
+            font-size: 0.9rem;
         }
 
         .nav-link:hover, .nav-link.active {
@@ -164,23 +245,21 @@
         }
 
         .nav-link i {
-            font-size: 1.25rem;
+            font-size: 1.1rem;
+            width: 20px;
+            text-align: center;
         }
 
         /* Main Content Styles */
         main {
             grid-area: main;
-            padding: 2rem;
+            padding: 1rem;
             overflow-y: auto;
         }
 
         .page {
-            display: none;
-            animation: fadeIn 0.5s ease-out;
-        }
-
-        .page.active {
             display: block;
+            animation: fadeIn 0.5s ease-out;
         }
 
         .dashboard-title {
@@ -188,30 +267,32 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
         }
 
         .dashboard-title h2 {
-            font-size: 1.75rem;
+            font-size: 1.5rem;
             font-weight: 600;
         }
 
         .date-display {
             color: var(--text-secondary);
-            font-size: 1rem;
+            font-size: 0.9rem;
         }
 
-        /* Summary Tiles */
-        .summary-tiles {
+        /* Client Stats */
+        .client-stats {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
         }
 
-        .tile {
+        .stat-card {
             background-color: var(--bg-card);
             border-radius: 12px;
-            padding: 1.5rem;
+            padding: 1rem;
             display: flex;
             flex-direction: column;
             box-shadow: 0 4px 6px var(--shadow);
@@ -220,87 +301,64 @@
             animation: fadeIn 0.5s ease-out;
         }
 
-        .tile:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 15px var(--shadow);
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px var(--shadow);
             background-color: var(--bg-card-hover);
         }
 
-        .tile-header {
+        .stat-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 1rem;
+            margin-bottom: 0.75rem;
         }
 
-        .tile-title {
-            font-size: 0.9rem;
+        .stat-title {
+            font-size: 0.8rem;
             color: var(--text-secondary);
         }
 
-        .tile-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
+        .stat-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
             background-color: rgba(124, 58, 237, 0.2);
             color: var(--primary);
+            font-size: 0.9rem;
         }
 
-        .tile-value {
-            font-size: 1.75rem;
+        .stat-value {
+            font-size: 1.5rem;
             font-weight: 700;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.25rem;
         }
 
-        .tile-growth {
-            font-size: 0.85rem;
+        .stat-growth {
+            font-size: 0.75rem;
             color: var(--secondary);
             display: flex;
             align-items: center;
             gap: 0.25rem;
         }
 
-        .tile-danger {
+        .stat-danger {
             color: var(--danger);
         }
 
-        /* Dashboard Grid */
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 1.5rem;
-        }
-
-        .card {
-            background-color: var(--bg-card);
-            border-radius: 12px;
-            padding: 1.5rem;
-            box-shadow: 0 4px 6px var(--shadow);
-            animation: slideUp 0.5s ease-out;
-        }
-
-        .card-header {
+        /* Client Actions */
+        .client-actions {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            gap: 0.75rem;
             margin-bottom: 1.5rem;
-        }
-
-        .card-title {
-            font-size: 1.25rem;
-            font-weight: 600;
-        }
-
-        .card-actions {
-            display: flex;
-            gap: 0.5rem;
+            flex-wrap: wrap;
         }
 
         .btn {
-            padding: 0.5rem 1rem;
+            padding: 0.6rem 1rem;
             border-radius: 8px;
             border: none;
             background-color: var(--primary);
@@ -311,6 +369,8 @@
             display: flex;
             align-items: center;
             gap: 0.5rem;
+            font-size: 0.85rem;
+            white-space: nowrap;
         }
 
         .btn:hover {
@@ -323,83 +383,78 @@
             border: 1px solid var(--border);
         }
 
-        /* Activity Stream */
-        .activity-stream {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
+        .btn-success {
+            background-color: var(--secondary);
         }
 
-        .activity-item {
-            display: flex;
-            gap: 1rem;
-            padding: 1rem;
-            border-radius: 8px;
-            background-color: var(--bg-dark);
-            transition: all 0.3s ease;
-            animation: fadeIn 0.5s ease-out;
+        .btn-warning {
+            background-color: var(--warning);
         }
 
-        .activity-item:hover {
-            background-color: var(--bg-card-hover);
+        .btn-danger {
+            background-color: var(--danger);
         }
 
-        .activity-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
-
-        .activity-icon.meeting {
-            background-color: rgba(16, 185, 129, 0.2);
-            color: var(--secondary);
-        }
-
-        .activity-icon.alert {
-            background-color: rgba(239, 68, 68, 0.2);
-            color: var(--danger);
-        }
-
-        .activity-icon.communication {
-            background-color: rgba(124, 58, 237, 0.2);
-            color: var(--primary);
-        }
-
-        .activity-content {
-            flex: 1;
-        }
-
-        .activity-title {
-            font-weight: 500;
-            margin-bottom: 0.25rem;
-        }
-
-        .activity-time {
-            font-size: 0.85rem;
-            color: var(--text-secondary);
+        .btn-sm {
+            padding: 0.4rem 0.75rem;
+            font-size: 0.8rem;
         }
 
         /* Client Table */
+        .card {
+            background-color: var(--bg-card);
+            border-radius: 12px;
+            padding: 1.25rem;
+            box-shadow: 0 4px 6px var(--shadow);
+            animation: slideUp 0.5s ease-out;
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.25rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
         .client-table {
             width: 100%;
             border-collapse: collapse;
+            min-width: 800px;
         }
 
         .client-table th {
             text-align: left;
-            padding: 0.75rem 1rem;
+            padding: 0.75rem 0.5rem;
             border-bottom: 1px solid var(--border);
             color: var(--text-secondary);
             font-weight: 500;
+            font-size: 0.85rem;
+            white-space: nowrap;
         }
 
         .client-table td {
-            padding: 1rem;
+            padding: 0.75rem 0.5rem;
             border-bottom: 1px solid var(--border);
+            font-size: 0.85rem;
         }
 
         .client-table tr:last-child td {
@@ -415,236 +470,21 @@
         }
 
         .status-badge {
-            padding: 0.25rem 0.75rem;
+            padding: 0.25rem 0.5rem;
             border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 500;
-        }
-
-        .status-on-track {
-            background-color: rgba(16, 185, 129, 0.2);
-            color: var(--secondary);
-        }
-
-        .status-at-risk {
-            background-color: rgba(245, 158, 11, 0.2);
-            color: var(--warning);
-        }
-
-        .status-overdue {
-            background-color: rgba(239, 68, 68, 0.2);
-            color: var(--danger);
-        }
-
-        /* Task Board */
-        .task-board {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1rem;
-        }
-
-        .task-column {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        .task-column-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0.75rem;
-            border-radius: 8px;
-            background-color: var(--bg-dark);
-        }
-
-        .task-column-title {
-            font-weight: 500;
-        }
-
-        .task-count {
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            background-color: var(--primary);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             font-size: 0.75rem;
-        }
-
-        .task-item {
-            background-color: var(--bg-dark);
-            border-radius: 8px;
-            padding: 1rem;
-            box-shadow: 0 2px 4px var(--shadow);
-            transition: all 0.3s ease;
-            animation: slideIn 0.5s ease-out;
-            border-left: 4px solid var(--primary);
-        }
-
-        .task-item:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 10px var(--shadow);
-        }
-
-        .task-item.urgent {
-            border-left-color: var(--danger);
-        }
-
-        .task-item.warning {
-            border-left-color: var(--warning);
-        }
-
-        .task-title {
             font-weight: 500;
-            margin-bottom: 0.5rem;
+            white-space: nowrap;
         }
 
-        .task-meta {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-        }
-
-        /* Charts */
-        .chart-container {
-            height: 250px;
-            margin-top: 1rem;
-        }
-
-        /* Client Details Page */
-        .client-details {
-            display: grid;
-            grid-template-columns: 1fr 2fr;
-            gap: 1.5rem;
-        }
-
-        .client-info-card {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-        }
-
-        .client-header {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            padding-bottom: 1.5rem;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .client-avatar {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
-            font-weight: bold;
-        }
-
-        .client-name {
-            font-size: 1.5rem;
-            font-weight: 600;
-        }
-
-        .client-meta {
-            color: var(--text-secondary);
-        }
-
-        .info-group {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-
-        .info-label {
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-        }
-
-        .info-value {
-            font-weight: 500;
-        }
-
-        /* Tasks Page */
-        .tasks-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-        }
-
-        .filter-options {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .filter-btn {
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            background-color: var(--bg-dark);
-            border: 1px solid var(--border);
-            color: var(--text-secondary);
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .filter-btn.active {
-            background-color: var(--primary);
-            color: white;
-            border-color: var(--primary);
-        }
-
-        /* Invoices Page */
-        .invoices-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .invoice-card {
-            background-color: var(--bg-card);
-            border-radius: 12px;
-            padding: 1.5rem;
-            box-shadow: 0 4px 6px var(--shadow);
-            transition: all 0.3s ease;
-            border-left: 4px solid var(--primary);
-        }
-
-        .invoice-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 15px var(--shadow);
-        }
-
-        .invoice-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 1rem;
-        }
-
-        .invoice-id {
-            font-weight: 600;
-            color: var(--primary);
-        }
-
-        .invoice-status {
-            padding: 0.25rem 0.75rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 500;
-        }
-
-        .status-paid {
+        .status-active {
             background-color: rgba(16, 185, 129, 0.2);
             color: var(--secondary);
+        }
+
+        .status-inactive {
+            background-color: rgba(107, 114, 128, 0.2);
+            color: var(--text-secondary);
         }
 
         .status-pending {
@@ -652,167 +492,228 @@
             color: var(--warning);
         }
 
-        .status-overdue {
-            background-color: rgba(239, 68, 68, 0.2);
+        .action-btns {
+            display: flex;
+            gap: 0.25rem;
+        }
+
+        .action-btn {
+            padding: 0.4rem;
+            border-radius: 6px;
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+        }
+
+        .action-btn:hover {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* Client Details Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease-out;
+            padding: 1rem;
+        }
+
+        .modal-content {
+            background-color: var(--bg-card);
+            border-radius: 12px;
+            width: 100%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 25px var(--shadow);
+            animation: slideUp 0.3s ease-out;
+        }
+
+        .modal-header {
+            padding: 1.25rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            background-color: var(--bg-card);
+            z-index: 1;
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .close-modal {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .close-modal:hover {
             color: var(--danger);
         }
 
-        .invoice-details {
+        .modal-body {
+            padding: 1.25rem;
+        }
+
+        .client-details-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+
+        .client-info-card {
+            background-color: var(--bg-dark);
+            border-radius: 8px;
+            padding: 1.25rem;
+        }
+
+        .client-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .client-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .client-name {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .client-meta {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .info-group {
             display: flex;
             flex-direction: column;
             gap: 0.5rem;
             margin-bottom: 1rem;
         }
 
-        .invoice-amount {
-            font-size: 1.5rem;
-            font-weight: 700;
+        .info-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .info-value {
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .services-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
             margin-top: 0.5rem;
         }
 
-        /* Reports Page */
-        .reports-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 1.5rem;
+        .service-tag {
+            padding: 0.25rem 0.5rem;
+            border-radius: 20px;
+            background-color: rgba(124, 58, 237, 0.2);
+            color: var(--primary);
+            font-size: 0.75rem;
         }
 
-        .report-card {
-            background-color: var(--bg-card);
-            border-radius: 12px;
-            padding: 1.5rem;
-            box-shadow: 0 4px 6px var(--shadow);
-            transition: all 0.3s ease;
-            display: flex;
+        /* Mobile Client Cards (Alternative to table) */
+        .mobile-client-cards {
+            display: none;
             flex-direction: column;
             gap: 1rem;
         }
 
-        .report-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 15px var(--shadow);
-        }
-
-        .report-icon {
-            width: 50px;
-            height: 50px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: rgba(124, 58, 237, 0.2);
-            color: var(--primary);
-            font-size: 1.5rem;
-        }
-
-        .report-title {
-            font-weight: 600;
-            font-size: 1.1rem;
-        }
-
-        .report-description {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-        }
-
-        /* Settings Page */
-        .settings-grid {
-            display: grid;
-            grid-template-columns: 1fr 2fr;
-            gap: 1.5rem;
-        }
-
-        .settings-nav {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-
-        .settings-nav-item {
-            padding: 1rem;
-            border-radius: 8px;
-            background-color: var(--bg-card);
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .settings-nav-item.active {
-            background-color: var(--primary);
-        }
-
-        .settings-nav-item:hover:not(.active) {
-            background-color: var(--bg-card-hover);
-        }
-
-        .settings-content {
+        .client-card {
             background-color: var(--bg-card);
             border-radius: 12px;
-            padding: 1.5rem;
+            padding: 1.25rem;
+            box-shadow: 0 4px 6px var(--shadow);
+            transition: all 0.3s ease;
+            border-left: 4px solid var(--primary);
         }
 
-        .setting-group {
-            margin-bottom: 1.5rem;
+        .client-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
         }
 
-        .setting-label {
-            font-weight: 500;
+        .client-card-name {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .client-card-services {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
             margin-bottom: 0.5rem;
         }
 
-        .setting-control {
-            width: 100%;
-            padding: 0.75rem;
-            border-radius: 8px;
-            background-color: var(--bg-dark);
-            border: 1px solid var(--border);
-            color: var(--text-primary);
+        .client-card-details {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
         }
 
-        .toggle-switch {
-            position: relative;
-            display: inline-block;
-            width: 50px;
-            height: 24px;
+        .client-card-detail {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
         }
 
-        .toggle-switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
+        .client-card-detail-label {
+            color: var(--text-secondary);
         }
 
-        .toggle-slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: var(--bg-dark);
-            border: 1px solid var(--border);
-            transition: .4s;
-            border-radius: 24px;
-        }
-
-        .toggle-slider:before {
-            position: absolute;
-            content: "";
-            height: 16px;
-            width: 16px;
-            left: 4px;
-            bottom: 3px;
-            background-color: var(--text-secondary);
-            transition: .4s;
-            border-radius: 50%;
-        }
-
-        input:checked + .toggle-slider {
-            background-color: var(--primary);
-        }
-
-        input:checked + .toggle-slider:before {
-            transform: translateX(26px);
-            background-color: white;
+        .client-card-actions {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: flex-end;
         }
 
         /* Animations */
@@ -832,13 +733,7 @@
         }
 
         /* Responsive Design */
-        @media (max-width: 1200px) {
-            .dashboard-grid, .client-details, .settings-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        @media (max-width: 768px) {
+        @media (max-width: 1024px) {
             .container {
                 grid-template-columns: 1fr;
                 grid-template-areas: 
@@ -850,22 +745,185 @@
                 display: none;
             }
             
-            .summary-tiles, .invoices-grid, .reports-grid {
-                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            .mobile-menu-btn {
+                display: block;
             }
             
-            .task-board {
+            .header-right .search-bar,
+            .header-right .user-info {
+                display: none;
+            }
+            
+            .mobile-search-btn {
+                display: block;
+            }
+            
+            .user-profile {
+                gap: 0.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            main {
+                padding: 0.75rem;
+            }
+            
+            .dashboard-title {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+            
+            .dashboard-title h2 {
+                font-size: 1.3rem;
+            }
+            
+            .client-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .client-actions {
+                gap: 0.5rem;
+            }
+            
+            .btn {
+                padding: 0.5rem 0.75rem;
+                font-size: 0.8rem;
+            }
+            
+            .card {
+                padding: 1rem;
+            }
+            
+            .card-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.75rem;
+            }
+            
+            .card-actions {
+                width: 100%;
+                justify-content: flex-end;
+            }
+            
+            .client-table {
+                display: none;
+            }
+            
+            .mobile-client-cards {
+                display: flex;
+            }
+            
+            .modal-content {
+                max-width: 100%;
+            }
+            
+            .modal-body .btn {
+                width: 100%;
+                justify-content: center;
+                margin-bottom: 0.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .client-stats {
                 grid-template-columns: 1fr;
             }
             
-            .header-right {
-                display: none;
+            .stat-card {
+                padding: 0.75rem;
+            }
+            
+            .stat-value {
+                font-size: 1.25rem;
+            }
+            
+            .client-actions {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .client-card {
+                padding: 1rem;
+            }
+            
+            .client-card-header {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .client-card-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .header-left h1 {
+                font-size: 1rem;
+            }
+            
+            .dashboard-title h2 {
+                font-size: 1.1rem;
+            }
+            
+            .client-card-detail {
+                flex-direction: column;
+                gap: 0.25rem;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
+        <!-- Mobile Menu Button -->
+        <button class="mobile-menu-btn" id="mobileMenuBtn">
+            <i class="fas fa-bars"></i>
+        </button>
+
+        <!-- Mobile Sidebar -->
+        <div class="mobile-sidebar" id="mobileSidebar">
+            <div class="mobile-sidebar-header">
+                <div class="logo">
+                    <i class="fas fa-chart-line"></i>
+                    <h2>PracticePulse</h2>
+                </div>
+                <button class="close-mobile-menu" id="closeMobileMenu">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="nav-links">
+                <a class="nav-link" data-page="dashboard">
+                    <i class="fas fa-home"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a class="nav-link active" data-page="clients">
+                    <i class="fas fa-users"></i>
+                    <span>Clients</span>
+                </a>
+                <a class="nav-link" data-page="tasks">
+                    <i class="fas fa-tasks"></i>
+                    <span>Tasks</span>
+                </a>
+                <a class="nav-link" data-page="invoices">
+                    <i class="fas fa-file-invoice"></i>
+                    <span>Invoices</span>
+                </a>
+                <a class="nav-link" data-page="reports">
+                    <i class="fas fa-chart-pie"></i>
+                    <span>Reports</span>
+                </a>
+                <a class="nav-link" data-page="settings">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </a>
+            </div>
+        </div>
+
         <!-- Header -->
         <header>
             <div class="header-left">
@@ -874,11 +932,14 @@
             <div class="header-right">
                 <div class="search-bar">
                     <i class="fas fa-search"></i>
-                    <input type="text" placeholder="Search clients, tasks...">
+                    <input type="text" placeholder="Search clients...">
                 </div>
+                <button class="mobile-search-btn">
+                    <i class="fas fa-search"></i>
+                </button>
                 <div class="user-profile">
                     <div class="user-avatar">CA</div>
-                    <div>
+                    <div class="user-info">
                         <div class="user-name">Rahul Sharma</div>
                         <div class="user-role">Chartered Accountant</div>
                     </div>
@@ -893,11 +954,11 @@
                 <h2>PracticePulse</h2>
             </div>
             <div class="nav-links">
-                <a class="nav-link active" data-page="dashboard">
+                <a class="nav-link" data-page="dashboard">
                     <i class="fas fa-home"></i>
                     <span>Dashboard</span>
                 </a>
-                <a class="nav-link" data-page="clients">
+                <a class="nav-link active" data-page="clients">
                     <i class="fas fa-users"></i>
                     <span>Clients</span>
                 </a>
@@ -922,378 +983,96 @@
 
         <!-- Main Content -->
         <main>
-            <!-- Dashboard Page -->
-            <div class="page active" id="dashboard">
+            <div class="page active" id="clients">
                 <div class="dashboard-title">
-                    <h2>Practice Overview</h2>
+                    <h2>Client Management</h2>
                     <div class="date-display" id="currentDate"></div>
                 </div>
 
-                <!-- Summary Tiles -->
-                <div class="summary-tiles">
-                    <div class="tile">
-                        <div class="tile-header">
-                            <div class="tile-title">Total Active Clients</div>
-                            <div class="tile-icon">
+                <!-- Client Stats -->
+                <div class="client-stats">
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-title">Total Clients</div>
+                            <div class="stat-icon">
                                 <i class="fas fa-users"></i>
                             </div>
                         </div>
-                        <div class="tile-value">45</div>
-                        <div class="tile-growth">
+                        <div class="stat-value">45</div>
+                        <div class="stat-growth">
                             <i class="fas fa-arrow-up"></i>
                             <span>+5 from last month</span>
                         </div>
                     </div>
-                    <div class="tile">
-                        <div class="tile-header">
-                            <div class="tile-title">Pending Tasks (Urgent)</div>
-                            <div class="tile-icon">
-                                <i class="fas fa-exclamation-circle"></i>
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-title">Active Clients</div>
+                            <div class="stat-icon">
+                                <i class="fas fa-user-check"></i>
                             </div>
                         </div>
-                        <div class="tile-value">5</div>
-                        <div class="tile-growth tile-danger">
+                        <div class="stat-value">38</div>
+                        <div class="stat-growth">
                             <i class="fas fa-arrow-up"></i>
-                            <span>+2 from yesterday</span>
+                            <span>84% of total</span>
                         </div>
                     </div>
-                    <div class="tile">
-                        <div class="tile-header">
-                            <div class="tile-title">Overdue Tasks</div>
-                            <div class="tile-icon">
-                                <i class="fas fa-clock"></i>
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-title">New This Month</div>
+                            <div class="stat-icon">
+                                <i class="fas fa-user-plus"></i>
                             </div>
                         </div>
-                        <div class="tile-value">2</div>
-                        <div class="tile-growth">
-                            <i class="fas fa-minus"></i>
-                            <span>No change</span>
+                        <div class="stat-value">5</div>
+                        <div class="stat-growth">
+                            <i class="fas fa-arrow-up"></i>
+                            <span>+2 from last month</span>
                         </div>
                     </div>
-                    <div class="tile">
-                        <div class="tile-header">
-                            <div class="tile-title">Unbilled Hours</div>
-                            <div class="tile-icon">
-                                <i class="fas fa-hourglass-half"></i>
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-title">Pending Documents</div>
+                            <div class="stat-icon">
+                                <i class="fas fa-file-alt"></i>
                             </div>
                         </div>
-                        <div class="tile-value">₹1,85,000</div>
-                        <div class="tile-growth">
-                            <i class="fas fa-arrow-up"></i>
-                            <span>+₹25,000 this week</span>
-                        </div>
-                    </div>
-                    <div class="tile">
-                        <div class="tile-header">
-                            <div class="tile-title">Accounts Receivable</div>
-                            <div class="tile-icon">
-                                <i class="fas fa-rupee-sign"></i>
-                            </div>
-                        </div>
-                        <div class="tile-value">₹3,42,500</div>
-                        <div class="tile-growth tile-danger">
-                            <i class="fas fa-arrow-up"></i>
-                            <span>+₹42,500 overdue</span>
-                        </div>
-                    </div>
-                    <div class="tile">
-                        <div class="tile-header">
-                            <div class="tile-title">This Month's Revenue</div>
-                            <div class="tile-icon">
-                                <i class="fas fa-chart-line"></i>
-                            </div>
-                        </div>
-                        <div class="tile-value">₹2,15,000</div>
-                        <div class="tile-growth">
-                            <i class="fas fa-arrow-up"></i>
-                            <span>+12% from last month</span>
+                        <div class="stat-value">12</div>
+                        <div class="stat-growth stat-danger">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <span>3 are overdue</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- Dashboard Grid -->
-                <div class="dashboard-grid">
-                    <!-- Left Column -->
-                    <div class="left-column">
-                        <!-- Activity Stream -->
-                        <div class="card">
-                            <div class="card-header">
-                                <div class="card-title">Daily Updates & Activity Stream</div>
-                                <div class="card-actions">
-                                    <button class="btn btn-secondary">
-                                        <i class="fas fa-filter"></i>
-                                        Filter
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="activity-stream">
-                                <div class="activity-item">
-                                    <div class="activity-icon meeting">
-                                        <i class="fas fa-video"></i>
-                                    </div>
-                                    <div class="activity-content">
-                                        <div class="activity-title">Meeting with ABC Traders</div>
-                                        <div class="activity-time">Today, 10:30 AM</div>
-                                    </div>
-                                </div>
-                                <div class="activity-item">
-                                    <div class="activity-icon communication">
-                                        <i class="fas fa-envelope"></i>
-                                    </div>
-                                    <div class="activity-content">
-                                        <div class="activity-title">Email from XYZ Ltd received</div>
-                                        <div class="activity-time">Today, 09:15 AM</div>
-                                    </div>
-                                </div>
-                                <div class="activity-item">
-                                    <div class="activity-icon alert">
-                                        <i class="fas fa-exclamation-triangle"></i>
-                                    </div>
-                                    <div class="activity-content">
-                                        <div class="activity-title">GST Return due for MNO Enterprises in 2 days</div>
-                                        <div class="activity-time">Alert • High Priority</div>
-                                    </div>
-                                </div>
-                                <div class="activity-item">
-                                    <div class="activity-icon alert">
-                                        <i class="fas fa-file-invoice"></i>
-                                    </div>
-                                    <div class="activity-content">
-                                        <div class="activity-title">Tax Audit report for PQR Ltd is pending review</div>
-                                        <div class="activity-time">Alert • Medium Priority</div>
-                                    </div>
-                                </div>
-                                <div class="activity-item">
-                                    <div class="activity-icon alert">
-                                        <i class="fas fa-rupee-sign"></i>
-                                    </div>
-                                    <div class="activity-content">
-                                        <div class="activity-title">Payment of ₹25,000 from Client STU is overdue by 15 days</div>
-                                        <div class="activity-time">Alert • High Priority</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Client Portfolio -->
-                        <div class="card">
-                            <div class="card-header">
-                                <div class="card-title">Client Portfolio Overview</div>
-                                <div class="card-actions">
-                                    <button class="btn">
-                                        <i class="fas fa-plus"></i>
-                                        Add Client
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="table-container">
-                                <table class="client-table">
-                                    <thead>
-                                        <tr>
-                                            <th>Client Name</th>
-                                            <th>Services</th>
-                                            <th>Last Contact</th>
-                                            <th>Next Deadline</th>
-                                            <th>Status</th>
-                                            <th>Outstanding</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>ABC Traders</td>
-                                            <td>GST, Taxation</td>
-                                            <td>2 days ago</td>
-                                            <td>15 Nov 2023</td>
-                                            <td><span class="status-badge status-on-track">On Track</span></td>
-                                            <td>₹0</td>
-                                        </tr>
-                                        <tr>
-                                            <td>XYZ Ltd</td>
-                                            <td>Audit, Compliance</td>
-                                            <td>1 week ago</td>
-                                            <td>30 Nov 2023</td>
-                                            <td><span class="status-badge status-at-risk">At Risk</span></td>
-                                            <td>₹45,000</td>
-                                        </tr>
-                                        <tr>
-                                            <td>MNO Enterprises</td>
-                                            <td>GST, Bookkeeping</td>
-                                            <td>3 days ago</td>
-                                            <td>20 Nov 2023</td>
-                                            <td><span class="status-badge status-on-track">On Track</span></td>
-                                            <td>₹0</td>
-                                        </tr>
-                                        <tr>
-                                            <td>PQR Ltd</td>
-                                            <td>Tax Audit, ROC</td>
-                                            <td>2 weeks ago</td>
-                                            <td>25 Nov 2023</td>
-                                            <td><span class="status-badge status-overdue">Overdue</span></td>
-                                            <td>₹75,000</td>
-                                        </tr>
-                                        <tr>
-                                            <td>STU & Co.</td>
-                                            <td>GST, Taxation, Advisory</td>
-                                            <td>5 days ago</td>
-                                            <td>10 Dec 2023</td>
-                                            <td><span class="status-badge status-on-track">On Track</span></td>
-                                            <td>₹25,000</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Right Column -->
-                    <div class="right-column">
-                        <!-- Task & Compliance Tracker -->
-                        <div class="card">
-                            <div class="card-header">
-                                <div class="card-title">Task & Compliance Tracker</div>
-                                <div class="card-actions">
-                                    <button class="btn">
-                                        <i class="fas fa-plus"></i>
-                                        Add Task
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="task-board">
-                                <div class="task-column">
-                                    <div class="task-column-header">
-                                        <div class="task-column-title">To Do</div>
-                                        <div class="task-count">3</div>
-                                    </div>
-                                    <div class="task-item urgent">
-                                        <div class="task-title">File GSTR-3B for Client ABC</div>
-                                        <div class="task-meta">
-                                            <span>Due: 20 Nov</span>
-                                            <span>High</span>
-                                        </div>
-                                    </div>
-                                    <div class="task-item">
-                                        <div class="task-title">Prepare Financial Statements for XYZ Ltd</div>
-                                        <div class="task-meta">
-                                            <span>Due: 25 Nov</span>
-                                            <span>Medium</span>
-                                        </div>
-                                    </div>
-                                    <div class="task-item">
-                                        <div class="task-title">Review TDS Compliance for MNO</div>
-                                        <div class="task-meta">
-                                            <span>Due: 28 Nov</span>
-                                            <span>Medium</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="task-column">
-                                    <div class="task-column-header">
-                                        <div class="task-column-title">In Progress</div>
-                                        <div class="task-count">2</div>
-                                    </div>
-                                    <div class="task-item warning">
-                                        <div class="task-title">Finalize TDS Return for Q2 - PQR Ltd</div>
-                                        <div class="task-meta">
-                                            <span>Due: Tomorrow</span>
-                                            <span>High</span>
-                                        </div>
-                                    </div>
-                                    <div class="task-item">
-                                        <div class="task-title">Draft Audit Report for STU & Co.</div>
-                                        <div class="task-meta">
-                                            <span>Due: 5 Dec</span>
-                                            <span>Medium</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="task-column">
-                                    <div class="task-column-header">
-                                        <div class="task-column-title">Completed</div>
-                                        <div class="task-count">4</div>
-                                    </div>
-                                    <div class="task-item">
-                                        <div class="task-title">Income Tax Return - Individual Client</div>
-                                        <div class="task-meta">
-                                            <span>Completed: Today</span>
-                                            <span>✓</span>
-                                        </div>
-                                    </div>
-                                    <div class="task-item">
-                                        <div class="task-title">GST Registration for New Client</div>
-                                        <div class="task-meta">
-                                            <span>Completed: Yesterday</span>
-                                            <span>✓</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Financial Health -->
-                        <div class="card">
-                            <div class="card-header">
-                                <div class="card-title">Financial Health Snapshot</div>
-                                <div class="card-actions">
-                                    <button class="btn btn-secondary">
-                                        <i class="fas fa-download"></i>
-                                        Export
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="chart-container">
-                                <canvas id="revenueChart"></canvas>
-                            </div>
-                        </div>
-
-                        <!-- Quick Actions -->
-                        <div class="card">
-                            <div class="card-header">
-                                <div class="card-title">Quick Actions</div>
-                            </div>
-                            <div class="quick-actions" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                                <button class="btn" style="justify-content: center;">
-                                    <i class="fas fa-user-plus"></i>
-                                    New Client
-                                </button>
-                                <button class="btn" style="justify-content: center;">
-                                    <i class="fas fa-tasks"></i>
-                                    Create Task
-                                </button>
-                                <button class="btn" style="justify-content: center;">
-                                    <i class="fas fa-file-invoice"></i>
-                                    Generate Invoice
-                                </button>
-                                <button class="btn" style="justify-content: center;">
-                                    <i class="fas fa-calendar-plus"></i>
-                                    Schedule
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Clients Page -->
-            <div class="page" id="clients">
-                <div class="dashboard-title">
-                    <h2>Client Management</h2>
-                    <button class="btn">
+                <!-- Client Actions -->
+                <div class="client-actions">
+                    <button class="btn btn-success" id="addClientBtn">
                         <i class="fas fa-user-plus"></i>
                         Add New Client
                     </button>
+                    <button class="btn btn-secondary">
+                        <i class="fas fa-filter"></i>
+                        Filter Clients
+                    </button>
+                    <button class="btn btn-secondary">
+                        <i class="fas fa-download"></i>
+                        Export Client List
+                    </button>
+                    <button class="btn btn-warning btn-sm">
+                        <i class="fas fa-bell"></i>
+                        Pending Actions
+                    </button>
                 </div>
 
+                <!-- Client Table (Desktop) -->
                 <div class="card">
                     <div class="card-header">
                         <div class="card-title">All Clients</div>
                         <div class="card-actions">
-                            <button class="btn btn-secondary">
-                                <i class="fas fa-filter"></i>
-                                Filter
-                            </button>
-                            <button class="btn btn-secondary">
-                                <i class="fas fa-download"></i>
-                                Export
+                            <button class="btn btn-secondary btn-sm">
+                                <i class="fas fa-sync-alt"></i>
+                                Refresh
                             </button>
                         </div>
                     </div>
@@ -1312,554 +1091,261 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>ABC Traders</td>
-                                    <td>GST, Taxation</td>
-                                    <td>abc@example.com</td>
-                                    <td>2 days ago</td>
-                                    <td>15 Nov 2023</td>
-                                    <td><span class="status-badge status-on-track">On Track</span></td>
-                                    <td>₹0</td>
-                                    <td>
-                                        <button class="btn" style="padding: 0.25rem 0.5rem; font-size: 0.8rem;">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>XYZ Ltd</td>
-                                    <td>Audit, Compliance</td>
-                                    <td>xyz@example.com</td>
-                                    <td>1 week ago</td>
-                                    <td>30 Nov 2023</td>
-                                    <td><span class="status-badge status-at-risk">At Risk</span></td>
-                                    <td>₹45,000</td>
-                                    <td>
-                                        <button class="btn" style="padding: 0.25rem 0.5rem; font-size: 0.8rem;">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>MNO Enterprises</td>
-                                    <td>GST, Bookkeeping</td>
-                                    <td>mno@example.com</td>
-                                    <td>3 days ago</td>
-                                    <td>20 Nov 2023</td>
-                                    <td><span class="status-badge status-on-track">On Track</span></td>
-                                    <td>₹0</td>
-                                    <td>
-                                        <button class="btn" style="padding: 0.25rem 0.5rem; font-size: 0.8rem;">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>PQR Ltd</td>
-                                    <td>Tax Audit, ROC</td>
-                                    <td>pqr@example.com</td>
-                                    <td>2 weeks ago</td>
-                                    <td>25 Nov 2023</td>
-                                    <td><span class="status-badge status-overdue">Overdue</span></td>
-                                    <td>₹75,000</td>
-                                    <td>
-                                        <button class="btn" style="padding: 0.25rem 0.5rem; font-size: 0.8rem;">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>STU & Co.</td>
-                                    <td>GST, Taxation, Advisory</td>
-                                    <td>stu@example.com</td>
-                                    <td>5 days ago</td>
-                                    <td>10 Dec 2023</td>
-                                    <td><span class="status-badge status-on-track">On Track</span></td>
-                                    <td>₹25,000</td>
-                                    <td>
-                                        <button class="btn" style="padding: 0.25rem 0.5rem; font-size: 0.8rem;">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>EFG Industries</td>
-                                    <td>Taxation, Consulting</td>
-                                    <td>efg@example.com</td>
-                                    <td>1 month ago</td>
-                                    <td>15 Dec 2023</td>
-                                    <td><span class="status-badge status-on-track">On Track</span></td>
-                                    <td>₹0</td>
-                                    <td>
-                                        <button class="btn" style="padding: 0.25rem 0.5rem; font-size: 0.8rem;">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>HIJ Solutions</td>
-                                    <td>GST, Audit</td>
-                                    <td>hij@example.com</td>
-                                    <td>3 weeks ago</td>
-                                    <td>5 Jan 2024</td>
-                                    <td><span class="status-badge status-at-risk">At Risk</span></td>
-                                    <td>₹15,000</td>
-                                    <td>
-                                        <button class="btn" style="padding: 0.25rem 0.5rem; font-size: 0.8rem;">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
-                                    </td>
-                                </tr>
+                                <!-- Table rows would be here in a real app -->
                             </tbody>
                         </table>
                     </div>
                 </div>
-            </div>
 
-            <!-- Tasks Page -->
-            <div class="page" id="tasks">
-                <div class="tasks-header">
-                    <h2>Task Management</h2>
-                    <button class="btn">
-                        <i class="fas fa-plus"></i>
-                        Add New Task
-                    </button>
+                <!-- Mobile Client Cards -->
+                <div class="mobile-client-cards">
+                    <div class="client-card">
+                        <div class="client-card-header">
+                            <div>
+                                <div class="client-card-name">ABC Traders</div>
+                                <div class="client-card-services">GST, Taxation</div>
+                                <div><span class="status-badge status-active">Active</span></div>
+                            </div>
+                            <div class="client-card-actions">
+                                <button class="action-btn view-client" data-client="abc-traders">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="action-btn">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="client-card-details">
+                            <div class="client-card-detail">
+                                <span class="client-card-detail-label">Contact:</span>
+                                <span>abc@example.com</span>
+                            </div>
+                            <div class="client-card-detail">
+                                <span class="client-card-detail-label">Last Contact:</span>
+                                <span>2 days ago</span>
+                            </div>
+                            <div class="client-card-detail">
+                                <span class="client-card-detail-label">Next Deadline:</span>
+                                <span>15 Nov 2023</span>
+                            </div>
+                            <div class="client-card-detail">
+                                <span class="client-card-detail-label">Outstanding:</span>
+                                <span>₹0</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="client-card">
+                        <div class="client-card-header">
+                            <div>
+                                <div class="client-card-name">XYZ Ltd</div>
+                                <div class="client-card-services">Audit, Compliance</div>
+                                <div><span class="status-badge status-active">Active</span></div>
+                            </div>
+                            <div class="client-card-actions">
+                                <button class="action-btn view-client" data-client="xyz-ltd">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="action-btn">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="client-card-details">
+                            <div class="client-card-detail">
+                                <span class="client-card-detail-label">Contact:</span>
+                                <span>xyz@example.com</span>
+                            </div>
+                            <div class="client-card-detail">
+                                <span class="client-card-detail-label">Last Contact:</span>
+                                <span>1 week ago</span>
+                            </div>
+                            <div class="client-card-detail">
+                                <span class="client-card-detail-label">Next Deadline:</span>
+                                <span>30 Nov 2023</span>
+                            </div>
+                            <div class="client-card-detail">
+                                <span class="client-card-detail-label">Outstanding:</span>
+                                <span>₹45,000</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="client-card">
+                        <div class="client-card-header">
+                            <div>
+                                <div class="client-card-name">PQR Ltd</div>
+                                <div class="client-card-services">Tax Audit, ROC</div>
+                                <div><span class="status-badge status-pending">Pending Docs</span></div>
+                            </div>
+                            <div class="client-card-actions">
+                                <button class="action-btn view-client" data-client="pqr-ltd">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="action-btn">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="client-card-details">
+                            <div class="client-card-detail">
+                                <span class="client-card-detail-label">Contact:</span>
+                                <span>pqr@example.com</span>
+                            </div>
+                            <div class="client-card-detail">
+                                <span class="client-card-detail-label">Last Contact:</span>
+                                <span>2 weeks ago</span>
+                            </div>
+                            <div class="client-card-detail">
+                                <span class="client-card-detail-label">Next Deadline:</span>
+                                <span>25 Nov 2023</span>
+                            </div>
+                            <div class="client-card-detail">
+                                <span class="client-card-detail-label">Outstanding:</span>
+                                <span>₹75,000</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="filter-options">
-                    <button class="filter-btn active">All Tasks</button>
-                    <button class="filter-btn">Urgent</button>
-                    <button class="filter-btn">Today</button>
-                    <button class="filter-btn">This Week</button>
-                    <button class="filter-btn">Overdue</button>
-                </div>
-
+                <!-- Client Services Overview -->
                 <div class="card">
                     <div class="card-header">
-                        <div class="card-title">Task Board</div>
-                        <div class="card-actions">
-                            <button class="btn btn-secondary">
-                                <i class="fas fa-filter"></i>
-                                Filter
-                            </button>
-                        </div>
+                        <div class="card-title">Client Services Overview</div>
                     </div>
-                    <div class="task-board">
-                        <div class="task-column">
-                            <div class="task-column-header">
-                                <div class="task-column-title">To Do</div>
-                                <div class="task-count">5</div>
-                            </div>
-                            <div class="task-item urgent">
-                                <div class="task-title">File GSTR-3B for Client ABC</div>
-                                <div class="task-meta">
-                                    <span>Due: 20 Nov</span>
-                                    <span>High</span>
-                                </div>
-                            </div>
-                            <div class="task-item">
-                                <div class="task-title">Prepare Financial Statements for XYZ Ltd</div>
-                                <div class="task-meta">
-                                    <span>Due: 25 Nov</span>
-                                    <span>Medium</span>
-                                </div>
-                            </div>
-                            <div class="task-item">
-                                <div class="task-title">Review TDS Compliance for MNO</div>
-                                <div class="task-meta">
-                                    <span>Due: 28 Nov</span>
-                                    <span>Medium</span>
-                                </div>
-                            </div>
-                            <div class="task-item">
-                                <div class="task-title">Draft Annual Report for EFG Industries</div>
-                                <div class="task-meta">
-                                    <span>Due: 5 Dec</span>
-                                    <span>Low</span>
-                                </div>
-                            </div>
-                            <div class="task-item">
-                                <div class="task-title">Client Meeting Preparation - HIJ Solutions</div>
-                                <div class="task-meta">
-                                    <span>Due: 10 Dec</span>
-                                    <span>Medium</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="task-column">
-                            <div class="task-column-header">
-                                <div class="task-column-title">In Progress</div>
-                                <div class="task-count">3</div>
-                            </div>
-                            <div class="task-item warning">
-                                <div class="task-title">Finalize TDS Return for Q2 - PQR Ltd</div>
-                                <div class="task-meta">
-                                    <span>Due: Tomorrow</span>
-                                    <span>High</span>
-                                </div>
-                            </div>
-                            <div class="task-item">
-                                <div class="task-title">Draft Audit Report for STU & Co.</div>
-                                <div class="task-meta">
-                                    <span>Due: 5 Dec</span>
-                                    <span>Medium</span>
-                                </div>
-                            </div>
-                            <div class="task-item">
-                                <div class="task-title">Tax Planning for FY 2023-24</div>
-                                <div class="task-meta">
-                                    <span>Due: 15 Dec</span>
-                                    <span>Medium</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="task-column">
-                            <div class="task-column-header">
-                                <div class="task-column-title">Completed</div>
-                                <div class="task-count">6</div>
-                            </div>
-                            <div class="task-item">
-                                <div class="task-title">Income Tax Return - Individual Client</div>
-                                <div class="task-meta">
-                                    <span>Completed: Today</span>
-                                    <span>✓</span>
-                                </div>
-                            </div>
-                            <div class="task-item">
-                                <div class="task-title">GST Registration for New Client</div>
-                                <div class="task-meta">
-                                    <span>Completed: Yesterday</span>
-                                    <span>✓</span>
-                                </div>
-                            </div>
-                            <div class="task-item">
-                                <div class="task-title">Monthly Bookkeeping - ABC Traders</div>
-                                <div class="task-meta">
-                                    <span>Completed: 2 days ago</span>
-                                    <span>✓</span>
-                                </div>
-                            </div>
-                            <div class="task-item">
-                                <div class="task-title">ROC Filing for XYZ Ltd</div>
-                                <div class="task-meta">
-                                    <span>Completed: 3 days ago</span>
-                                    <span>✓</span>
-                                </div>
-                            </div>
-                            <div class="task-item">
-                                <div class="task-title">Client Consultation - MNO Enterprises</div>
-                                <div class="task-meta">
-                                    <span>Completed: 1 week ago</span>
-                                    <span>✓</span>
-                                </div>
-                            </div>
-                            <div class="task-item">
-                                <div class="task-title">Tax Audit - PQR Ltd</div>
-                                <div class="task-meta">
-                                    <span>Completed: 2 weeks ago</span>
-                                    <span>✓</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Invoices Page -->
-            <div class="page" id="invoices">
-                <div class="dashboard-title">
-                    <h2>Invoice Management</h2>
-                    <button class="btn">
-                        <i class="fas fa-file-invoice"></i>
-                        Create New Invoice
-                    </button>
-                </div>
-
-                <div class="invoices-grid">
-                    <div class="invoice-card">
-                        <div class="invoice-header">
-                            <div class="invoice-id">INV-2023-001</div>
-                            <div class="invoice-status status-paid">Paid</div>
-                        </div>
-                        <div class="invoice-details">
-                            <div class="info-label">Client</div>
-                            <div class="info-value">ABC Traders</div>
-                            <div class="info-label">Issue Date</div>
-                            <div class="info-value">15 Oct 2023</div>
-                            <div class="info-label">Due Date</div>
-                            <div class="info-value">30 Oct 2023</div>
-                        </div>
-                        <div class="invoice-amount">₹45,000</div>
-                    </div>
-
-                    <div class="invoice-card">
-                        <div class="invoice-header">
-                            <div class="invoice-id">INV-2023-002</div>
-                            <div class="invoice-status status-pending">Pending</div>
-                        </div>
-                        <div class="invoice-details">
-                            <div class="info-label">Client</div>
-                            <div class="info-value">XYZ Ltd</div>
-                            <div class="info-label">Issue Date</div>
-                            <div class="info-value">20 Oct 2023</div>
-                            <div class="info-label">Due Date</div>
-                            <div class="info-value">5 Nov 2023</div>
-                        </div>
-                        <div class="invoice-amount">₹75,000</div>
-                    </div>
-
-                    <div class="invoice-card">
-                        <div class="invoice-header">
-                            <div class="invoice-id">INV-2023-003</div>
-                            <div class="invoice-status status-overdue">Overdue</div>
-                        </div>
-                        <div class="invoice-details">
-                            <div class="info-label">Client</div>
-                            <div class="info-value">PQR Ltd</div>
-                            <div class="info-label">Issue Date</div>
-                            <div class="info-value">5 Oct 2023</div>
-                            <div class="info-label">Due Date</div>
-                            <div class="info-value">20 Oct 2023</div>
-                        </div>
-                        <div class="invoice-amount">₹60,000</div>
-                    </div>
-
-                    <div class="invoice-card">
-                        <div class="invoice-header">
-                            <div class="invoice-id">INV-2023-004</div>
-                            <div class="invoice-status status-paid">Paid</div>
-                        </div>
-                        <div class="invoice-details">
-                            <div class="info-label">Client</div>
-                            <div class="info-value">MNO Enterprises</div>
-                            <div class="info-label">Issue Date</div>
-                            <div class="info-value">10 Nov 2023</div>
-                            <div class="info-label">Due Date</div>
-                            <div class="info-value">25 Nov 2023</div>
-                        </div>
-                        <div class="invoice-amount">₹35,000</div>
-                    </div>
-
-                    <div class="invoice-card">
-                        <div class="invoice-header">
-                            <div class="invoice-id">INV-2023-005</div>
-                            <div class="invoice-status status-pending">Pending</div>
-                        </div>
-                        <div class="invoice-details">
-                            <div class="info-label">Client</div>
-                            <div class="info-value">STU & Co.</div>
-                            <div class="info-label">Issue Date</div>
-                            <div class="info-value">15 Nov 2023</div>
-                            <div class="info-label">Due Date</div>
-                            <div class="info-value">30 Nov 2023</div>
-                        </div>
-                        <div class="invoice-amount">₹50,000</div>
-                    </div>
-
-                    <div class="invoice-card">
-                        <div class="invoice-header">
-                            <div class="invoice-id">INV-2023-006</div>
-                            <div class="invoice-status status-pending">Pending</div>
-                        </div>
-                        <div class="invoice-details">
-                            <div class="info-label">Client</div>
-                            <div class="info-value">EFG Industries</div>
-                            <div class="info-label">Issue Date</div>
-                            <div class="info-value">18 Nov 2023</div>
-                            <div class="info-label">Due Date</div>
-                            <div class="info-value">3 Dec 2023</div>
-                        </div>
-                        <div class="invoice-amount">₹40,000</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Reports Page -->
-            <div class="page" id="reports">
-                <div class="dashboard-title">
-                    <h2>Reports & Analytics</h2>
-                    <button class="btn">
-                        <i class="fas fa-download"></i>
-                        Export All Reports
-                    </button>
-                </div>
-
-                <div class="reports-grid">
-                    <div class="report-card">
-                        <div class="report-icon">
-                            <i class="fas fa-chart-line"></i>
-                        </div>
-                        <div class="report-title">Revenue Report</div>
-                        <div class="report-description">Monthly revenue trends and performance analysis</div>
-                        <button class="btn">
-                            <i class="fas fa-eye"></i>
-                            View Report
-                        </button>
-                    </div>
-
-                    <div class="report-card">
-                        <div class="report-icon">
-                            <i class="fas fa-users"></i>
-                        </div>
-                        <div class="report-title">Client Portfolio</div>
-                        <div class="report-description">Analysis of client distribution and profitability</div>
-                        <button class="btn">
-                            <i class="fas fa-eye"></i>
-                            View Report
-                        </button>
-                    </div>
-
-                    <div class="report-card">
-                        <div class="report-icon">
-                            <i class="fas fa-tasks"></i>
-                        </div>
-                        <div class="report-title">Task Performance</div>
-                        <div class="report-description">Efficiency and completion rate analysis</div>
-                        <button class="btn">
-                            <i class="fas fa-eye"></i>
-                            View Report
-                        </button>
-                    </div>
-
-                    <div class="report-card">
-                        <div class="report-icon">
-                            <i class="fas fa-file-invoice"></i>
-                        </div>
-                        <div class="report-title">Invoice Analytics</div>
-                        <div class="report-description">Payment patterns and outstanding analysis</div>
-                        <button class="btn">
-                            <i class="fas fa-eye"></i>
-                            View Report
-                        </button>
-                    </div>
-
-                    <div class="report-card">
-                        <div class="report-icon">
-                            <i class="fas fa-balance-scale"></i>
-                        </div>
-                        <div class="report-title">Compliance Status</div>
-                        <div class="report-description">Regulatory compliance tracking and reporting</div>
-                        <button class="btn">
-                            <i class="fas fa-eye"></i>
-                            View Report
-                        </button>
-                    </div>
-
-                    <div class="report-card">
-                        <div class="report-icon">
-                            <i class="fas fa-chart-pie"></i>
-                        </div>
-                        <div class="report-title">Service Analysis</div>
-                        <div class="report-description">Breakdown of services and revenue streams</div>
-                        <button class="btn">
-                            <i class="fas fa-eye"></i>
-                            View Report
-                        </button>
-                    </div>
-                </div>
-
-                <div class="card" style="margin-top: 2rem;">
-                    <div class="card-header">
-                        <div class="card-title">Financial Performance - Last 6 Months</div>
-                    </div>
-                    <div class="chart-container">
-                        <canvas id="performanceChart"></canvas>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Settings Page -->
-            <div class="page" id="settings">
-                <div class="dashboard-title">
-                    <h2>Settings</h2>
-                </div>
-
-                <div class="settings-grid">
-                    <div class="settings-nav">
-                        <div class="settings-nav-item active">Profile Settings</div>
-                        <div class="settings-nav-item">Notification Preferences</div>
-                        <div class="settings-nav-item">Billing & Subscription</div>
-                        <div class="settings-nav-item">Security</div>
-                        <div class="settings-nav-item">Integrations</div>
-                    </div>
-
-                    <div class="settings-content">
-                        <h3 style="margin-bottom: 1.5rem;">Profile Settings</h3>
-
-                        <div class="setting-group">
-                            <div class="setting-label">Full Name</div>
-                            <input type="text" class="setting-control" value="Rahul Sharma">
-                        </div>
-
-                        <div class="setting-group">
-                            <div class="setting-label">Email Address</div>
-                            <input type="email" class="setting-control" value="rahul.sharma@example.com">
-                        </div>
-
-                        <div class="setting-group">
-                            <div class="setting-label">Phone Number</div>
-                            <input type="tel" class="setting-control" value="+91 98765 43210">
-                        </div>
-
-                        <div class="setting-group">
-                            <div class="setting-label">Firm Name</div>
-                            <input type="text" class="setting-control" value="Sharma & Associates">
-                        </div>
-
-                        <div class="setting-group">
-                            <div class="setting-label">Address</div>
-                            <textarea class="setting-control" rows="3">123 Business Street, Financial District, Mumbai, Maharashtra - 400001</textarea>
-                        </div>
-
-                        <div class="setting-group">
-                            <div class="setting-label">GSTIN</div>
-                            <input type="text" class="setting-control" value="27ABCDE1234F1Z5">
-                        </div>
-
-                        <div class="setting-group">
-                            <div class="setting-label">Theme Preference</div>
-                            <div style="display: flex; gap: 1rem; margin-top: 0.5rem;">
-                                <div style="display: flex; align-items: center; gap: 0.5rem;">
-                                    <input type="radio" id="dark-theme" name="theme" checked>
-                                    <label for="dark-theme">Dark Theme</label>
-                                </div>
-                                <div style="display: flex; align-items: center; gap: 0.5rem;">
-                                    <input type="radio" id="light-theme" name="theme">
-                                    <label for="light-theme">Light Theme</label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="setting-group">
-                            <div class="setting-label">Email Notifications</div>
-                            <div style="display: flex; align-items: center; gap: 1rem; margin-top: 0.5rem;">
-                                <label class="toggle-switch">
-                                    <input type="checkbox" checked>
-                                    <span class="toggle-slider"></span>
-                                </label>
-                                <span>Receive email notifications</span>
-                            </div>
-                        </div>
-
-                        <div class="setting-group">
-                            <div class="setting-label">SMS Notifications</div>
-                            <div style="display: flex; align-items: center; gap: 1rem; margin-top: 0.5rem;">
-                                <label class="toggle-switch">
-                                    <input type="checkbox">
-                                    <span class="toggle-slider"></span>
-                                </label>
-                                <span>Receive SMS notifications</span>
-                            </div>
-                        </div>
-
-                        <button class="btn" style="margin-top: 1rem;">
-                            <i class="fas fa-save"></i>
-                            Save Changes
-                        </button>
+                    <div class="chart-container" style="height: 250px;">
+                        <canvas id="servicesChart"></canvas>
                     </div>
                 </div>
             </div>
         </main>
+    </div>
+
+    <!-- Client Details Modal -->
+    <div class="modal" id="clientModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Client Details</div>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="client-details-grid">
+                    <div class="client-info-card">
+                        <div class="client-header">
+                            <div class="client-avatar" id="clientAvatar">A</div>
+                            <div>
+                                <div class="client-name" id="clientName">ABC Traders</div>
+                                <div class="client-meta" id="clientType">Proprietorship</div>
+                            </div>
+                        </div>
+                        
+                        <div class="info-group">
+                            <div class="info-label">Contact Person</div>
+                            <div class="info-value" id="contactPerson">Amit Sharma</div>
+                        </div>
+                        
+                        <div class="info-group">
+                            <div class="info-label">Email</div>
+                            <div class="info-value" id="clientEmail">abc@example.com</div>
+                        </div>
+                        
+                        <div class="info-group">
+                            <div class="info-label">Phone</div>
+                            <div class="info-value" id="clientPhone">+91 98765 43210</div>
+                        </div>
+                        
+                        <div class="info-group">
+                            <div class="info-label">Address</div>
+                            <div class="info-value" id="clientAddress">123 Business Street, Financial District, Mumbai, Maharashtra - 400001</div>
+                        </div>
+                        
+                        <div class="info-group">
+                            <div class="info-label">GSTIN</div>
+                            <div class="info-value" id="clientGST">27ABCDE1234F1Z5</div>
+                        </div>
+                    </div>
+                    
+                    <div class="client-info-card">
+                        <div class="info-group">
+                            <div class="info-label">Services</div>
+                            <div class="services-list" id="clientServices">
+                                <!-- Services will be populated by JS -->
+                            </div>
+                        </div>
+                        
+                        <div class="info-group">
+                            <div class="info-label">Client Since</div>
+                            <div class="info-value" id="clientSince">15 March 2020</div>
+                        </div>
+                        
+                        <div class="info-group">
+                            <div class="info-label">Last Contact</div>
+                            <div class="info-value" id="lastContact">2 days ago</div>
+                        </div>
+                        
+                        <div class="info-group">
+                            <div class="info-label">Next Deadline</div>
+                            <div class="info-value" id="nextDeadline">15 November 2023</div>
+                        </div>
+                        
+                        <div class="info-group">
+                            <div class="info-label">Outstanding Balance</div>
+                            <div class="info-value" id="outstandingBalance">₹0</div>
+                        </div>
+                        
+                        <div class="info-group">
+                            <div class="info-label">Status</div>
+                            <div id="clientStatus"><span class="status-badge status-active">Active</span></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card" style="margin-top: 1.5rem;">
+                    <div class="card-header">
+                        <div class="card-title">Recent Activities</div>
+                    </div>
+                    <div class="activity-stream">
+                        <div class="activity-item">
+                            <div class="activity-icon meeting">
+                                <i class="fas fa-video"></i>
+                            </div>
+                            <div class="activity-content">
+                                <div class="activity-title">Consultation Meeting</div>
+                                <div class="activity-time">Today, 10:30 AM</div>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon communication">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div class="activity-content">
+                                <div class="activity-title">Sent GST Return Reminder</div>
+                                <div class="activity-time">Yesterday, 3:15 PM</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="display: flex; flex-direction: column; gap: 0.5rem; margin-top: 1.5rem;">
+                    <button class="btn">
+                        <i class="fas fa-edit"></i>
+                        Edit Client
+                    </button>
+                    <button class="btn btn-secondary">
+                        <i class="fas fa-file-invoice"></i>
+                        Create Invoice
+                    </button>
+                    <button class="btn btn-secondary">
+                        <i class="fas fa-tasks"></i>
+                        Add Task
+                    </button>
+                    <button class="btn btn-danger">
+                        <i class="fas fa-trash"></i>
+                        Delete Client
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -1869,20 +1355,23 @@
         const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
         currentDateElement.textContent = now.toLocaleDateString('en-IN', options);
 
-        // Initialize Revenue Chart
-        const revenueCtx = document.getElementById('revenueChart').getContext('2d');
-        const revenueChart = new Chart(revenueCtx, {
-            type: 'line',
+        // Initialize Services Chart
+        const servicesCtx = document.getElementById('servicesChart').getContext('2d');
+        const servicesChart = new Chart(servicesCtx, {
+            type: 'doughnut',
             data: {
-                labels: ['Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov'],
+                labels: ['GST', 'Taxation', 'Audit', 'Compliance', 'Bookkeeping', 'Advisory'],
                 datasets: [{
-                    label: 'Monthly Revenue (₹)',
-                    data: [185000, 192000, 178000, 205000, 215000, 230000],
-                    borderColor: '#7c3aed',
-                    backgroundColor: 'rgba(124, 58, 237, 0.1)',
-                    borderWidth: 2,
-                    fill: true,
-                    tension: 0.4
+                    data: [18, 12, 8, 10, 7, 5],
+                    backgroundColor: [
+                        '#7c3aed',
+                        '#10b981',
+                        '#f59e0b',
+                        '#ef4444',
+                        '#8b5cf6',
+                        '#06b6d4'
+                    ],
+                    borderWidth: 0
                 }]
             },
             options: {
@@ -1890,114 +1379,161 @@
                 maintainAspectRatio: false,
                 plugins: {
                     legend: {
-                        display: false
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: false,
-                        grid: {
-                            color: 'rgba(255, 255, 255, 0.1)'
-                        },
-                        ticks: {
-                            callback: function(value) {
-                                return '₹' + value.toLocaleString('en-IN');
+                        position: 'bottom',
+                        labels: {
+                            boxWidth: 12,
+                            font: {
+                                size: 10
                             }
-                        }
-                    },
-                    x: {
-                        grid: {
-                            color: 'rgba(255, 255, 255, 0.1)'
                         }
                     }
                 }
             }
         });
 
-        // Initialize Performance Chart
-        const performanceCtx = document.getElementById('performanceChart').getContext('2d');
-        const performanceChart = new Chart(performanceCtx, {
-            type: 'bar',
-            data: {
-                labels: ['Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov'],
-                datasets: [{
-                    label: 'Revenue (₹)',
-                    data: [185000, 192000, 178000, 205000, 215000, 230000],
-                    backgroundColor: 'rgba(124, 58, 237, 0.7)',
-                    borderColor: '#7c3aed',
-                    borderWidth: 1
-                }, {
-                    label: 'Expenses (₹)',
-                    data: [75000, 82000, 78000, 85000, 92000, 88000],
-                    backgroundColor: 'rgba(239, 68, 68, 0.7)',
-                    borderColor: '#ef4444',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        grid: {
-                            color: 'rgba(255, 255, 255, 0.1)'
-                        },
-                        ticks: {
-                            callback: function(value) {
-                                return '₹' + value.toLocaleString('en-IN');
-                            }
-                        }
-                    },
-                    x: {
-                        grid: {
-                            color: 'rgba(255, 255, 255, 0.1)'
-                        }
-                    }
-                }
-            }
+        // Mobile menu functionality
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileSidebar = document.getElementById('mobileSidebar');
+        const closeMobileMenu = document.getElementById('closeMobileMenu');
+
+        mobileMenuBtn.addEventListener('click', function() {
+            mobileSidebar.classList.add('active');
+            document.body.style.overflow = 'hidden';
         });
 
-        // Page Navigation
-        document.querySelectorAll('.nav-link').forEach(link => {
+        closeMobileMenu.addEventListener('click', function() {
+            mobileSidebar.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        });
+
+        // Close mobile menu when clicking on a link
+        document.querySelectorAll('.mobile-sidebar .nav-link').forEach(link => {
             link.addEventListener('click', function() {
-                const targetPage = this.getAttribute('data-page');
+                mobileSidebar.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            });
+        });
+
+        // Client data for modal
+        const clients = {
+            'abc-traders': {
+                name: 'ABC Traders',
+                type: 'Proprietorship',
+                contactPerson: 'Amit Sharma',
+                email: 'abc@example.com',
+                phone: '+91 98765 43210',
+                address: '123 Business Street, Financial District, Mumbai, Maharashtra - 400001',
+                gst: '27ABCDE1234F1Z5',
+                services: ['GST', 'Taxation'],
+                since: '15 March 2020',
+                lastContact: '2 days ago',
+                nextDeadline: '15 November 2023',
+                outstanding: '₹0',
+                status: 'active',
+                avatar: 'A'
+            },
+            'xyz-ltd': {
+                name: 'XYZ Ltd',
+                type: 'Private Limited',
+                contactPerson: 'Rajiv Mehta',
+                email: 'xyz@example.com',
+                phone: '+91 98765 43211',
+                address: '456 Corporate Avenue, Andheri East, Mumbai, Maharashtra - 400069',
+                gst: '27XYZAB5678G2H3',
+                services: ['Audit', 'Compliance'],
+                since: '10 July 2019',
+                lastContact: '1 week ago',
+                nextDeadline: '30 November 2023',
+                outstanding: '₹45,000',
+                status: 'active',
+                avatar: 'X'
+            },
+            'pqr-ltd': {
+                name: 'PQR Ltd',
+                type: 'Private Limited',
+                contactPerson: 'Sanjay Gupta',
+                email: 'pqr@example.com',
+                phone: '+91 98765 43213',
+                address: '321 Industry Zone, Thane West, Thane, Maharashtra - 400601',
+                gst: '27PQREF3456K7L8',
+                services: ['Tax Audit', 'ROC'],
+                since: '22 November 2018',
+                lastContact: '2 weeks ago',
+                nextDeadline: '25 November 2023',
+                outstanding: '₹75,000',
+                status: 'pending',
+                avatar: 'P'
+            }
+        };
+
+        // Modal functionality
+        const modal = document.getElementById('clientModal');
+        const closeModal = document.querySelector('.close-modal');
+        const viewClientButtons = document.querySelectorAll('.view-client');
+
+        viewClientButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const clientId = this.getAttribute('data-client');
+                const client = clients[clientId];
                 
-                // Update active nav link
-                document.querySelectorAll('.nav-link').forEach(nav => {
-                    nav.classList.remove('active');
-                });
-                this.classList.add('active');
-                
-                // Show target page
-                document.querySelectorAll('.page').forEach(page => {
-                    page.classList.remove('active');
-                });
-                document.getElementById(targetPage).classList.add('active');
+                if (client) {
+                    document.getElementById('clientAvatar').textContent = client.avatar;
+                    document.getElementById('clientName').textContent = client.name;
+                    document.getElementById('clientType').textContent = client.type;
+                    document.getElementById('contactPerson').textContent = client.contactPerson;
+                    document.getElementById('clientEmail').textContent = client.email;
+                    document.getElementById('clientPhone').textContent = client.phone;
+                    document.getElementById('clientAddress').textContent = client.address;
+                    document.getElementById('clientGST').textContent = client.gst;
+                    document.getElementById('clientSince').textContent = client.since;
+                    document.getElementById('lastContact').textContent = client.lastContact;
+                    document.getElementById('nextDeadline').textContent = client.nextDeadline;
+                    document.getElementById('outstandingBalance').textContent = client.outstanding;
+                    
+                    // Update services
+                    const servicesContainer = document.getElementById('clientServices');
+                    servicesContainer.innerHTML = '';
+                    client.services.forEach(service => {
+                        const serviceTag = document.createElement('span');
+                        serviceTag.className = 'service-tag';
+                        serviceTag.textContent = service;
+                        servicesContainer.appendChild(serviceTag);
+                    });
+                    
+                    // Update status
+                    const statusContainer = document.getElementById('clientStatus');
+                    statusContainer.innerHTML = '';
+                    let statusClass = 'status-active';
+                    if (client.status === 'pending') statusClass = 'status-pending';
+                    if (client.status === 'inactive') statusClass = 'status-inactive';
+                    
+                    const statusBadge = document.createElement('span');
+                    statusBadge.className = `status-badge ${statusClass}`;
+                    statusBadge.textContent = 
+                        client.status === 'active' ? 'Active' : 
+                        client.status === 'pending' ? 'Pending Docs' : 'Inactive';
+                    statusContainer.appendChild(statusBadge);
+                    
+                    // Show modal
+                    modal.style.display = 'flex';
+                    document.body.style.overflow = 'hidden';
+                }
             });
         });
 
-        // Filter buttons for tasks
-        document.querySelectorAll('.filter-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                document.querySelectorAll('.filter-btn').forEach(b => {
-                    b.classList.remove('active');
-                });
-                this.classList.add('active');
-            });
+        closeModal.addEventListener('click', function() {
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
         });
 
-        // Settings navigation
-        document.querySelectorAll('.settings-nav-item').forEach(item => {
-            item.addEventListener('click', function() {
-                document.querySelectorAll('.settings-nav-item').forEach(nav => {
-                    nav.classList.remove('active');
-                });
-                this.classList.add('active');
-            });
+        window.addEventListener('click', function(event) {
+            if (event.target === modal) {
+                modal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
         });
 
-        // Add animation to tiles on scroll
+        // Add animation to elements on scroll
         const observerOptions = {
             threshold: 0.1,
             rootMargin: '0px 0px -50px 0px'
@@ -2012,21 +1548,41 @@
             });
         }, observerOptions);
 
-        // Observe all tiles and cards
-        document.querySelectorAll('.tile, .card, .activity-item, .task-item, .invoice-card, .report-card').forEach(el => {
+        // Observe all stat cards and client cards
+        document.querySelectorAll('.stat-card, .client-card').forEach(el => {
             el.style.opacity = '0';
             observer.observe(el);
         });
 
         // Add hover effects to interactive elements
-        document.querySelectorAll('.btn, .nav-link, .activity-item, .task-item, .tile, .invoice-card, .report-card, .settings-nav-item').forEach(el => {
+        document.querySelectorAll('.btn, .nav-link, .action-btn, .stat-card, .client-card').forEach(el => {
             el.addEventListener('mouseenter', function() {
-                this.style.transform = 'translateY(-2px)';
+                if (window.innerWidth > 768) { // Only on desktop
+                    this.style.transform = 'translateY(-2px)';
+                }
             });
             
             el.addEventListener('mouseleave', function() {
-                this.style.transform = 'translateY(0)';
+                if (window.innerWidth > 768) { // Only on desktop
+                    this.style.transform = 'translateY(0)';
+                }
             });
+        });
+
+        // Add new client button functionality
+        document.getElementById('addClientBtn').addEventListener('click', function() {
+            alert('Add New Client functionality would open a form here in a real application.');
+        });
+
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            // Adjust chart legend position based on screen size
+            if (window.innerWidth < 768) {
+                servicesChart.options.plugins.legend.position = 'bottom';
+            } else {
+                servicesChart.options.plugins.legend.position = 'right';
+            }
+            servicesChart.update();
         });
     </script>
 </body>
