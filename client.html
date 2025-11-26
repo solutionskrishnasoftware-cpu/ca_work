@@ -46,21 +46,74 @@
             min-height: 100vh;
         }
 
+        /* Mobile Menu */
+        .mobile-menu-btn {
+            display: none;
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .mobile-sidebar {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--bg-card);
+            z-index: 1000;
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+            overflow-y: auto;
+        }
+
+        .mobile-sidebar.active {
+            transform: translateX(0);
+        }
+
+        .mobile-sidebar-header {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .close-mobile-menu {
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
         /* Header Styles */
         header {
             grid-area: header;
             background-color: var(--bg-card);
-            padding: 0 2rem;
+            padding: 0 1rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
             box-shadow: 0 4px 6px var(--shadow);
             z-index: 10;
             border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
         }
 
         .header-left h1 {
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             font-weight: 600;
             background: linear-gradient(90deg, var(--primary), var(--secondary));
             -webkit-background-clip: text;
@@ -70,7 +123,7 @@
         .header-right {
             display: flex;
             align-items: center;
-            gap: 1.5rem;
+            gap: 1rem;
         }
 
         .search-bar {
@@ -78,8 +131,8 @@
             align-items: center;
             background: var(--bg-dark);
             border-radius: 8px;
-            padding: 0.5rem 1rem;
-            width: 300px;
+            padding: 0.5rem;
+            min-width: 200px;
         }
 
         .search-bar input {
@@ -87,8 +140,18 @@
             border: none;
             color: var(--text-primary);
             width: 100%;
-            padding: 0.5rem;
+            padding: 0.25rem;
             outline: none;
+            font-size: 0.9rem;
+        }
+
+        .mobile-search-btn {
+            display: none;
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1.2rem;
+            cursor: pointer;
         }
 
         .user-profile {
@@ -99,14 +162,30 @@
         }
 
         .user-avatar {
-            width: 40px;
-            height: 40px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-name {
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .user-role {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
         }
 
         /* Sidebar Styles */
@@ -118,6 +197,7 @@
             flex-direction: column;
             border-right: 1px solid var(--border);
             box-shadow: 4px 0 6px var(--shadow);
+            overflow-y: auto;
         }
 
         .logo {
@@ -129,12 +209,12 @@
         }
 
         .logo i {
-            font-size: 1.75rem;
+            font-size: 1.5rem;
             color: var(--primary);
         }
 
         .logo h2 {
-            font-size: 1.25rem;
+            font-size: 1.1rem;
             font-weight: 600;
         }
 
@@ -156,6 +236,7 @@
             text-decoration: none;
             transition: all 0.3s ease;
             cursor: pointer;
+            font-size: 0.9rem;
         }
 
         .nav-link:hover, .nav-link.active {
@@ -164,13 +245,15 @@
         }
 
         .nav-link i {
-            font-size: 1.25rem;
+            font-size: 1.1rem;
+            width: 20px;
+            text-align: center;
         }
 
         /* Main Content Styles */
         main {
             grid-area: main;
-            padding: 2rem;
+            padding: 1rem;
             overflow-y: auto;
         }
 
@@ -184,30 +267,32 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
         }
 
         .dashboard-title h2 {
-            font-size: 1.75rem;
+            font-size: 1.5rem;
             font-weight: 600;
         }
 
         .date-display {
             color: var(--text-secondary);
-            font-size: 1rem;
+            font-size: 0.9rem;
         }
 
         /* Client Stats */
         .client-stats {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
         }
 
         .stat-card {
             background-color: var(--bg-card);
             border-radius: 12px;
-            padding: 1.5rem;
+            padding: 1rem;
             display: flex;
             flex-direction: column;
             box-shadow: 0 4px 6px var(--shadow);
@@ -217,8 +302,8 @@
         }
 
         .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 15px var(--shadow);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px var(--shadow);
             background-color: var(--bg-card-hover);
         }
 
@@ -226,33 +311,34 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 1rem;
+            margin-bottom: 0.75rem;
         }
 
         .stat-title {
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             color: var(--text-secondary);
         }
 
         .stat-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
             background-color: rgba(124, 58, 237, 0.2);
             color: var(--primary);
+            font-size: 0.9rem;
         }
 
         .stat-value {
-            font-size: 1.75rem;
+            font-size: 1.5rem;
             font-weight: 700;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.25rem;
         }
 
         .stat-growth {
-            font-size: 0.85rem;
+            font-size: 0.75rem;
             color: var(--secondary);
             display: flex;
             align-items: center;
@@ -266,13 +352,13 @@
         /* Client Actions */
         .client-actions {
             display: flex;
-            gap: 1rem;
+            gap: 0.75rem;
             margin-bottom: 1.5rem;
             flex-wrap: wrap;
         }
 
         .btn {
-            padding: 0.5rem 1rem;
+            padding: 0.6rem 1rem;
             border-radius: 8px;
             border: none;
             background-color: var(--primary);
@@ -283,6 +369,8 @@
             display: flex;
             align-items: center;
             gap: 0.5rem;
+            font-size: 0.85rem;
+            white-space: nowrap;
         }
 
         .btn:hover {
@@ -307,25 +395,33 @@
             background-color: var(--danger);
         }
 
+        .btn-sm {
+            padding: 0.4rem 0.75rem;
+            font-size: 0.8rem;
+        }
+
         /* Client Table */
         .card {
             background-color: var(--bg-card);
             border-radius: 12px;
-            padding: 1.5rem;
+            padding: 1.25rem;
             box-shadow: 0 4px 6px var(--shadow);
             animation: slideUp 0.5s ease-out;
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
+            overflow: hidden;
         }
 
         .card-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.25rem;
+            flex-wrap: wrap;
+            gap: 1rem;
         }
 
         .card-title {
-            font-size: 1.25rem;
+            font-size: 1.1rem;
             font-weight: 600;
         }
 
@@ -334,22 +430,31 @@
             gap: 0.5rem;
         }
 
+        .table-container {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
         .client-table {
             width: 100%;
             border-collapse: collapse;
+            min-width: 800px;
         }
 
         .client-table th {
             text-align: left;
-            padding: 0.75rem 1rem;
+            padding: 0.75rem 0.5rem;
             border-bottom: 1px solid var(--border);
             color: var(--text-secondary);
             font-weight: 500;
+            font-size: 0.85rem;
+            white-space: nowrap;
         }
 
         .client-table td {
-            padding: 1rem;
+            padding: 0.75rem 0.5rem;
             border-bottom: 1px solid var(--border);
+            font-size: 0.85rem;
         }
 
         .client-table tr:last-child td {
@@ -365,10 +470,11 @@
         }
 
         .status-badge {
-            padding: 0.25rem 0.75rem;
+            padding: 0.25rem 0.5rem;
             border-radius: 20px;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             font-weight: 500;
+            white-space: nowrap;
         }
 
         .status-active {
@@ -388,11 +494,11 @@
 
         .action-btns {
             display: flex;
-            gap: 0.5rem;
+            gap: 0.25rem;
         }
 
         .action-btn {
-            padding: 0.25rem 0.5rem;
+            padding: 0.4rem;
             border-radius: 6px;
             background: transparent;
             border: 1px solid var(--border);
@@ -402,6 +508,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            font-size: 0.8rem;
         }
 
         .action-btn:hover {
@@ -423,13 +530,14 @@
             align-items: center;
             justify-content: center;
             animation: fadeIn 0.3s ease-out;
+            padding: 1rem;
         }
 
         .modal-content {
             background-color: var(--bg-card);
             border-radius: 12px;
-            width: 90%;
-            max-width: 800px;
+            width: 100%;
+            max-width: 500px;
             max-height: 90vh;
             overflow-y: auto;
             box-shadow: 0 10px 25px var(--shadow);
@@ -437,15 +545,19 @@
         }
 
         .modal-header {
-            padding: 1.5rem;
+            padding: 1.25rem;
             border-bottom: 1px solid var(--border);
             display: flex;
             justify-content: space-between;
             align-items: center;
+            position: sticky;
+            top: 0;
+            background-color: var(--bg-card);
+            z-index: 1;
         }
 
         .modal-title {
-            font-size: 1.5rem;
+            font-size: 1.25rem;
             font-weight: 600;
         }
 
@@ -456,6 +568,12 @@
             font-size: 1.5rem;
             cursor: pointer;
             transition: all 0.3s ease;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .close-modal:hover {
@@ -463,47 +581,49 @@
         }
 
         .modal-body {
-            padding: 1.5rem;
+            padding: 1.25rem;
         }
 
         .client-details-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
         }
 
         .client-info-card {
             background-color: var(--bg-dark);
             border-radius: 8px;
-            padding: 1.5rem;
+            padding: 1.25rem;
         }
 
         .client-header {
             display: flex;
             align-items: center;
             gap: 1rem;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.25rem;
         }
 
         .client-avatar {
-            width: 80px;
-            height: 80px;
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2rem;
+            font-size: 1.5rem;
             font-weight: bold;
+            flex-shrink: 0;
         }
 
         .client-name {
-            font-size: 1.5rem;
+            font-size: 1.25rem;
             font-weight: 600;
         }
 
         .client-meta {
             color: var(--text-secondary);
+            font-size: 0.9rem;
         }
 
         .info-group {
@@ -514,12 +634,13 @@
         }
 
         .info-label {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: var(--text-secondary);
         }
 
         .info-value {
             font-weight: 500;
+            font-size: 0.9rem;
         }
 
         .services-list {
@@ -530,11 +651,69 @@
         }
 
         .service-tag {
-            padding: 0.25rem 0.75rem;
+            padding: 0.25rem 0.5rem;
             border-radius: 20px;
             background-color: rgba(124, 58, 237, 0.2);
             color: var(--primary);
-            font-size: 0.8rem;
+            font-size: 0.75rem;
+        }
+
+        /* Mobile Client Cards (Alternative to table) */
+        .mobile-client-cards {
+            display: none;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .client-card {
+            background-color: var(--bg-card);
+            border-radius: 12px;
+            padding: 1.25rem;
+            box-shadow: 0 4px 6px var(--shadow);
+            transition: all 0.3s ease;
+            border-left: 4px solid var(--primary);
+        }
+
+        .client-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .client-card-name {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .client-card-services {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .client-card-details {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .client-card-detail {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+        }
+
+        .client-card-detail-label {
+            color: var(--text-secondary);
+        }
+
+        .client-card-actions {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: flex-end;
         }
 
         /* Animations */
@@ -554,13 +733,7 @@
         }
 
         /* Responsive Design */
-        @media (max-width: 1200px) {
-            .client-details-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        @media (max-width: 768px) {
+        @media (max-width: 1024px) {
             .container {
                 grid-template-columns: 1fr;
                 grid-template-areas: 
@@ -572,27 +745,185 @@
                 display: none;
             }
             
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .header-right .search-bar,
+            .header-right .user-info {
+                display: none;
+            }
+            
+            .mobile-search-btn {
+                display: block;
+            }
+            
+            .user-profile {
+                gap: 0.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            main {
+                padding: 0.75rem;
+            }
+            
+            .dashboard-title {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+            
+            .dashboard-title h2 {
+                font-size: 1.3rem;
+            }
+            
             .client-stats {
-                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .client-actions {
+                gap: 0.5rem;
+            }
+            
+            .btn {
+                padding: 0.5rem 0.75rem;
+                font-size: 0.8rem;
+            }
+            
+            .card {
+                padding: 1rem;
+            }
+            
+            .card-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.75rem;
+            }
+            
+            .card-actions {
+                width: 100%;
+                justify-content: flex-end;
+            }
+            
+            .client-table {
+                display: none;
+            }
+            
+            .mobile-client-cards {
+                display: flex;
+            }
+            
+            .modal-content {
+                max-width: 100%;
+            }
+            
+            .modal-body .btn {
+                width: 100%;
+                justify-content: center;
+                margin-bottom: 0.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .client-stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .stat-card {
+                padding: 0.75rem;
+            }
+            
+            .stat-value {
+                font-size: 1.25rem;
             }
             
             .client-actions {
                 flex-direction: column;
             }
             
-            .header-right {
-                display: none;
+            .btn {
+                width: 100%;
+                justify-content: center;
             }
             
-            .client-table {
-                display: block;
-                overflow-x: auto;
+            .client-card {
+                padding: 1rem;
+            }
+            
+            .client-card-header {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .client-card-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .header-left h1 {
+                font-size: 1rem;
+            }
+            
+            .dashboard-title h2 {
+                font-size: 1.1rem;
+            }
+            
+            .client-card-detail {
+                flex-direction: column;
+                gap: 0.25rem;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
+        <!-- Mobile Menu Button -->
+        <button class="mobile-menu-btn" id="mobileMenuBtn">
+            <i class="fas fa-bars"></i>
+        </button>
+
+        <!-- Mobile Sidebar -->
+        <div class="mobile-sidebar" id="mobileSidebar">
+            <div class="mobile-sidebar-header">
+                <div class="logo">
+                    <i class="fas fa-chart-line"></i>
+                    <h2>PracticePulse</h2>
+                </div>
+                <button class="close-mobile-menu" id="closeMobileMenu">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="nav-links">
+                <a class="nav-link" data-page="dashboard">
+                    <i class="fas fa-home"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a class="nav-link active" data-page="clients">
+                    <i class="fas fa-users"></i>
+                    <span>Clients</span>
+                </a>
+                <a class="nav-link" data-page="tasks">
+                    <i class="fas fa-tasks"></i>
+                    <span>Tasks</span>
+                </a>
+                <a class="nav-link" data-page="invoices">
+                    <i class="fas fa-file-invoice"></i>
+                    <span>Invoices</span>
+                </a>
+                <a class="nav-link" data-page="reports">
+                    <i class="fas fa-chart-pie"></i>
+                    <span>Reports</span>
+                </a>
+                <a class="nav-link" data-page="settings">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </a>
+            </div>
+        </div>
+
         <!-- Header -->
         <header>
             <div class="header-left">
@@ -603,9 +934,12 @@
                     <i class="fas fa-search"></i>
                     <input type="text" placeholder="Search clients...">
                 </div>
+                <button class="mobile-search-btn">
+                    <i class="fas fa-search"></i>
+                </button>
                 <div class="user-profile">
                     <div class="user-avatar">CA</div>
-                    <div>
+                    <div class="user-info">
                         <div class="user-name">Rahul Sharma</div>
                         <div class="user-role">Chartered Accountant</div>
                     </div>
@@ -725,22 +1059,18 @@
                         <i class="fas fa-download"></i>
                         Export Client List
                     </button>
-                    <button class="btn btn-secondary">
-                        <i class="fas fa-envelope"></i>
-                        Send Bulk Email
-                    </button>
-                    <button class="btn btn-warning">
+                    <button class="btn btn-warning btn-sm">
                         <i class="fas fa-bell"></i>
                         Pending Actions
                     </button>
                 </div>
 
-                <!-- Client Table -->
+                <!-- Client Table (Desktop) -->
                 <div class="card">
                     <div class="card-header">
                         <div class="card-title">All Clients</div>
                         <div class="card-actions">
-                            <button class="btn btn-secondary">
+                            <button class="btn btn-secondary btn-sm">
                                 <i class="fas fa-sync-alt"></i>
                                 Refresh
                             </button>
@@ -761,162 +1091,120 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>ABC Traders</td>
-                                    <td>GST, Taxation</td>
-                                    <td>abc@example.com<br>+91 98765 43210</td>
-                                    <td>2 days ago</td>
-                                    <td>15 Nov 2023</td>
-                                    <td><span class="status-badge status-active">Active</span></td>
-                                    <td>₹0</td>
-                                    <td>
-                                        <div class="action-btns">
-                                            <button class="action-btn view-client" data-client="abc-traders">
-                                                <i class="fas fa-eye"></i>
-                                            </button>
-                                            <button class="action-btn">
-                                                <i class="fas fa-edit"></i>
-                                            </button>
-                                            <button class="action-btn">
-                                                <i class="fas fa-envelope"></i>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>XYZ Ltd</td>
-                                    <td>Audit, Compliance</td>
-                                    <td>xyz@example.com<br>+91 98765 43211</td>
-                                    <td>1 week ago</td>
-                                    <td>30 Nov 2023</td>
-                                    <td><span class="status-badge status-active">Active</span></td>
-                                    <td>₹45,000</td>
-                                    <td>
-                                        <div class="action-btns">
-                                            <button class="action-btn view-client" data-client="xyz-ltd">
-                                                <i class="fas fa-eye"></i>
-                                            </button>
-                                            <button class="action-btn">
-                                                <i class="fas fa-edit"></i>
-                                            </button>
-                                            <button class="action-btn">
-                                                <i class="fas fa-envelope"></i>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>MNO Enterprises</td>
-                                    <td>GST, Bookkeeping</td>
-                                    <td>mno@example.com<br>+91 98765 43212</td>
-                                    <td>3 days ago</td>
-                                    <td>20 Nov 2023</td>
-                                    <td><span class="status-badge status-active">Active</span></td>
-                                    <td>₹0</td>
-                                    <td>
-                                        <div class="action-btns">
-                                            <button class="action-btn view-client" data-client="mno-enterprises">
-                                                <i class="fas fa-eye"></i>
-                                            </button>
-                                            <button class="action-btn">
-                                                <i class="fas fa-edit"></i>
-                                            </button>
-                                            <button class="action-btn">
-                                                <i class="fas fa-envelope"></i>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>PQR Ltd</td>
-                                    <td>Tax Audit, ROC</td>
-                                    <td>pqr@example.com<br>+91 98765 43213</td>
-                                    <td>2 weeks ago</td>
-                                    <td>25 Nov 2023</td>
-                                    <td><span class="status-badge status-pending">Pending Docs</span></td>
-                                    <td>₹75,000</td>
-                                    <td>
-                                        <div class="action-btns">
-                                            <button class="action-btn view-client" data-client="pqr-ltd">
-                                                <i class="fas fa-eye"></i>
-                                            </button>
-                                            <button class="action-btn">
-                                                <i class="fas fa-edit"></i>
-                                            </button>
-                                            <button class="action-btn">
-                                                <i class="fas fa-envelope"></i>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>STU & Co.</td>
-                                    <td>GST, Taxation, Advisory</td>
-                                    <td>stu@example.com<br>+91 98765 43214</td>
-                                    <td>5 days ago</td>
-                                    <td>10 Dec 2023</td>
-                                    <td><span class="status-badge status-active">Active</span></td>
-                                    <td>₹25,000</td>
-                                    <td>
-                                        <div class="action-btns">
-                                            <button class="action-btn view-client" data-client="stu-co">
-                                                <i class="fas fa-eye"></i>
-                                            </button>
-                                            <button class="action-btn">
-                                                <i class="fas fa-edit"></i>
-                                            </button>
-                                            <button class="action-btn">
-                                                <i class="fas fa-envelope"></i>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>EFG Industries</td>
-                                    <td>Taxation, Consulting</td>
-                                    <td>efg@example.com<br>+91 98765 43215</td>
-                                    <td>1 month ago</td>
-                                    <td>15 Dec 2023</td>
-                                    <td><span class="status-badge status-inactive">Inactive</span></td>
-                                    <td>₹0</td>
-                                    <td>
-                                        <div class="action-btns">
-                                            <button class="action-btn view-client" data-client="efg-industries">
-                                                <i class="fas fa-eye"></i>
-                                            </button>
-                                            <button class="action-btn">
-                                                <i class="fas fa-edit"></i>
-                                            </button>
-                                            <button class="action-btn">
-                                                <i class="fas fa-envelope"></i>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>HIJ Solutions</td>
-                                    <td>GST, Audit</td>
-                                    <td>hij@example.com<br>+91 98765 43216</td>
-                                    <td>3 weeks ago</td>
-                                    <td>5 Jan 2024</td>
-                                    <td><span class="status-badge status-active">Active</span></td>
-                                    <td>₹15,000</td>
-                                    <td>
-                                        <div class="action-btns">
-                                            <button class="action-btn view-client" data-client="hij-solutions">
-                                                <i class="fas fa-eye"></i>
-                                            </button>
-                                            <button class="action-btn">
-                                                <i class="fas fa-edit"></i>
-                                            </button>
-                                            <button class="action-btn">
-                                                <i class="fas fa-envelope"></i>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
+                                <!-- Table rows would be here in a real app -->
                             </tbody>
                         </table>
+                    </div>
+                </div>
+
+                <!-- Mobile Client Cards -->
+                <div class="mobile-client-cards">
+                    <div class="client-card">
+                        <div class="client-card-header">
+                            <div>
+                                <div class="client-card-name">ABC Traders</div>
+                                <div class="client-card-services">GST, Taxation</div>
+                                <div><span class="status-badge status-active">Active</span></div>
+                            </div>
+                            <div class="client-card-actions">
+                                <button class="action-btn view-client" data-client="abc-traders">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="action-btn">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="client-card-details">
+                            <div class="client-card-detail">
+                                <span class="client-card-detail-label">Contact:</span>
+                                <span>abc@example.com</span>
+                            </div>
+                            <div class="client-card-detail">
+                                <span class="client-card-detail-label">Last Contact:</span>
+                                <span>2 days ago</span>
+                            </div>
+                            <div class="client-card-detail">
+                                <span class="client-card-detail-label">Next Deadline:</span>
+                                <span>15 Nov 2023</span>
+                            </div>
+                            <div class="client-card-detail">
+                                <span class="client-card-detail-label">Outstanding:</span>
+                                <span>₹0</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="client-card">
+                        <div class="client-card-header">
+                            <div>
+                                <div class="client-card-name">XYZ Ltd</div>
+                                <div class="client-card-services">Audit, Compliance</div>
+                                <div><span class="status-badge status-active">Active</span></div>
+                            </div>
+                            <div class="client-card-actions">
+                                <button class="action-btn view-client" data-client="xyz-ltd">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="action-btn">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="client-card-details">
+                            <div class="client-card-detail">
+                                <span class="client-card-detail-label">Contact:</span>
+                                <span>xyz@example.com</span>
+                            </div>
+                            <div class="client-card-detail">
+                                <span class="client-card-detail-label">Last Contact:</span>
+                                <span>1 week ago</span>
+                            </div>
+                            <div class="client-card-detail">
+                                <span class="client-card-detail-label">Next Deadline:</span>
+                                <span>30 Nov 2023</span>
+                            </div>
+                            <div class="client-card-detail">
+                                <span class="client-card-detail-label">Outstanding:</span>
+                                <span>₹45,000</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="client-card">
+                        <div class="client-card-header">
+                            <div>
+                                <div class="client-card-name">PQR Ltd</div>
+                                <div class="client-card-services">Tax Audit, ROC</div>
+                                <div><span class="status-badge status-pending">Pending Docs</span></div>
+                            </div>
+                            <div class="client-card-actions">
+                                <button class="action-btn view-client" data-client="pqr-ltd">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="action-btn">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="client-card-details">
+                            <div class="client-card-detail">
+                                <span class="client-card-detail-label">Contact:</span>
+                                <span>pqr@example.com</span>
+                            </div>
+                            <div class="client-card-detail">
+                                <span class="client-card-detail-label">Last Contact:</span>
+                                <span>2 weeks ago</span>
+                            </div>
+                            <div class="client-card-detail">
+                                <span class="client-card-detail-label">Next Deadline:</span>
+                                <span>25 Nov 2023</span>
+                            </div>
+                            <div class="client-card-detail">
+                                <span class="client-card-detail-label">Outstanding:</span>
+                                <span>₹75,000</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -925,7 +1213,7 @@
                     <div class="card-header">
                         <div class="card-title">Client Services Overview</div>
                     </div>
-                    <div class="chart-container">
+                    <div class="chart-container" style="height: 250px;">
                         <canvas id="servicesChart"></canvas>
                     </div>
                 </div>
@@ -1035,19 +1323,10 @@
                                 <div class="activity-time">Yesterday, 3:15 PM</div>
                             </div>
                         </div>
-                        <div class="activity-item">
-                            <div class="activity-icon communication">
-                                <i class="fas fa-file-invoice"></i>
-                            </div>
-                            <div class="activity-content">
-                                <div class="activity-title">Invoice #INV-2023-045 Sent</div>
-                                <div class="activity-time">2 days ago</div>
-                            </div>
-                        </div>
                     </div>
                 </div>
                 
-                <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                <div style="display: flex; flex-direction: column; gap: 0.5rem; margin-top: 1.5rem;">
                     <button class="btn">
                         <i class="fas fa-edit"></i>
                         Edit Client
@@ -1100,10 +1379,39 @@
                 maintainAspectRatio: false,
                 plugins: {
                     legend: {
-                        position: 'right'
+                        position: 'bottom',
+                        labels: {
+                            boxWidth: 12,
+                            font: {
+                                size: 10
+                            }
+                        }
                     }
                 }
             }
+        });
+
+        // Mobile menu functionality
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileSidebar = document.getElementById('mobileSidebar');
+        const closeMobileMenu = document.getElementById('closeMobileMenu');
+
+        mobileMenuBtn.addEventListener('click', function() {
+            mobileSidebar.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+
+        closeMobileMenu.addEventListener('click', function() {
+            mobileSidebar.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        });
+
+        // Close mobile menu when clicking on a link
+        document.querySelectorAll('.mobile-sidebar .nav-link').forEach(link => {
+            link.addEventListener('click', function() {
+                mobileSidebar.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            });
         });
 
         // Client data for modal
@@ -1140,22 +1448,6 @@
                 status: 'active',
                 avatar: 'X'
             },
-            'mno-enterprises': {
-                name: 'MNO Enterprises',
-                type: 'Partnership',
-                contactPerson: 'Priya Patel',
-                email: 'mno@example.com',
-                phone: '+91 98765 43212',
-                address: '789 Trade Center, Lower Parel, Mumbai, Maharashtra - 400013',
-                gst: '27MNOCD9012I3J4',
-                services: ['GST', 'Bookkeeping'],
-                since: '5 January 2021',
-                lastContact: '3 days ago',
-                nextDeadline: '20 November 2023',
-                outstanding: '₹0',
-                status: 'active',
-                avatar: 'M'
-            },
             'pqr-ltd': {
                 name: 'PQR Ltd',
                 type: 'Private Limited',
@@ -1171,54 +1463,6 @@
                 outstanding: '₹75,000',
                 status: 'pending',
                 avatar: 'P'
-            },
-            'stu-co': {
-                name: 'STU & Co.',
-                type: 'Partnership',
-                contactPerson: 'Neha Singh',
-                email: 'stu@example.com',
-                phone: '+91 98765 43214',
-                address: '654 Commerce Road, Vashi, Navi Mumbai, Maharashtra - 400703',
-                gst: '27STUGH7890M9N0',
-                services: ['GST', 'Taxation', 'Advisory'],
-                since: '8 September 2020',
-                lastContact: '5 days ago',
-                nextDeadline: '10 December 2023',
-                outstanding: '₹25,000',
-                status: 'active',
-                avatar: 'S'
-            },
-            'efg-industries': {
-                name: 'EFG Industries',
-                type: 'Private Limited',
-                contactPerson: 'Vikram Joshi',
-                email: 'efg@example.com',
-                phone: '+91 98765 43215',
-                address: '987 Manufacturing Hub, Pune, Maharashtra - 411001',
-                gst: '27EFGIJ1234K5L6',
-                services: ['Taxation', 'Consulting'],
-                since: '3 May 2017',
-                lastContact: '1 month ago',
-                nextDeadline: '15 December 2023',
-                outstanding: '₹0',
-                status: 'inactive',
-                avatar: 'E'
-            },
-            'hij-solutions': {
-                name: 'HIJ Solutions',
-                type: 'Proprietorship',
-                contactPerson: 'Anita Desai',
-                email: 'hij@example.com',
-                phone: '+91 98765 43216',
-                address: '147 Tech Park, Hinjewadi, Pune, Maharashtra - 411057',
-                gst: '27HIJKL5678M9N0',
-                services: ['GST', 'Audit'],
-                since: '12 December 2021',
-                lastContact: '3 weeks ago',
-                nextDeadline: '5 January 2024',
-                outstanding: '₹15,000',
-                status: 'active',
-                avatar: 'H'
             }
         };
 
@@ -1272,17 +1516,20 @@
                     
                     // Show modal
                     modal.style.display = 'flex';
+                    document.body.style.overflow = 'hidden';
                 }
             });
         });
 
         closeModal.addEventListener('click', function() {
             modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
         });
 
         window.addEventListener('click', function(event) {
             if (event.target === modal) {
                 modal.style.display = 'none';
+                document.body.style.overflow = 'auto';
             }
         });
 
@@ -1301,26 +1548,41 @@
             });
         }, observerOptions);
 
-        // Observe all stat cards and table rows
-        document.querySelectorAll('.stat-card, .client-table tr').forEach(el => {
+        // Observe all stat cards and client cards
+        document.querySelectorAll('.stat-card, .client-card').forEach(el => {
             el.style.opacity = '0';
             observer.observe(el);
         });
 
         // Add hover effects to interactive elements
-        document.querySelectorAll('.btn, .nav-link, .action-btn, .stat-card').forEach(el => {
+        document.querySelectorAll('.btn, .nav-link, .action-btn, .stat-card, .client-card').forEach(el => {
             el.addEventListener('mouseenter', function() {
-                this.style.transform = 'translateY(-2px)';
+                if (window.innerWidth > 768) { // Only on desktop
+                    this.style.transform = 'translateY(-2px)';
+                }
             });
             
             el.addEventListener('mouseleave', function() {
-                this.style.transform = 'translateY(0)';
+                if (window.innerWidth > 768) { // Only on desktop
+                    this.style.transform = 'translateY(0)';
+                }
             });
         });
 
         // Add new client button functionality
         document.getElementById('addClientBtn').addEventListener('click', function() {
             alert('Add New Client functionality would open a form here in a real application.');
+        });
+
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            // Adjust chart legend position based on screen size
+            if (window.innerWidth < 768) {
+                servicesChart.options.plugins.legend.position = 'bottom';
+            } else {
+                servicesChart.options.plugins.legend.position = 'right';
+            }
+            servicesChart.update();
         });
     </script>
 </body>
