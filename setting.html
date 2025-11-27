@@ -1,0 +1,1442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings | CA Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #6c5ce7;
+            --primary-light: #8a7cf0;
+            --secondary: #00cec9;
+            --dark: #121826;
+            --dark-light: #1e293b;
+            --text: #e2e8f0;
+            --text-light: #94a3b8;
+            --success: #00b894;
+            --warning: #fdcb6e;
+            --danger: #e17055;
+            --border-radius: 12px;
+            --transition: all 0.3s ease;
+            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--dark);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 260px;
+            background: var(--dark-light);
+            padding: 25px 0;
+            box-shadow: var(--shadow);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            padding: 0 25px 25px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logo i {
+            font-size: 28px;
+            color: var(--primary);
+            margin-right: 10px;
+        }
+
+        .logo h1 {
+            font-size: 22px;
+            font-weight: 700;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .nav-links {
+            margin-top: 25px;
+        }
+
+        .nav-links li {
+            list-style: none;
+            margin-bottom: 5px;
+        }
+
+        .nav-links a {
+            display: flex;
+            align-items: center;
+            padding: 14px 25px;
+            color: var(--text-light);
+            text-decoration: none;
+            transition: var(--transition);
+            border-left: 4px solid transparent;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            background: rgba(108, 92, 231, 0.1);
+            color: var(--text);
+            border-left-color: var(--primary);
+        }
+
+        .nav-links i {
+            font-size: 20px;
+            margin-right: 15px;
+            width: 25px;
+            text-align: center;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
+            padding: 25px;
+            overflow-y: auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .header h2 {
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-info img {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--primary);
+        }
+
+        /* Settings Navigation */
+        .settings-nav {
+            display: flex;
+            background: var(--dark-light);
+            border-radius: var(--border-radius);
+            padding: 10px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+            flex-wrap: wrap;
+        }
+
+        .settings-nav button {
+            background: transparent;
+            border: none;
+            color: var(--text-light);
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 500;
+        }
+
+        .settings-nav button:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text);
+        }
+
+        .settings-nav button.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Settings Content */
+        .settings-content {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 25px;
+        }
+
+        .settings-section {
+            background: var(--dark-light);
+            border-radius: var(--border-radius);
+            padding: 25px;
+            box-shadow: var(--shadow);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .section-header h3 {
+            font-size: 20px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-header i {
+            color: var(--primary);
+        }
+
+        /* Security Settings */
+        .security-items {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .security-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+        }
+
+        .security-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .security-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .security-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(108, 92, 231, 0.2);
+            color: var(--primary);
+            font-size: 20px;
+        }
+
+        .security-details h4 {
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .security-details p {
+            font-size: 14px;
+            color: var(--text-light);
+        }
+
+        .security-status {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-active {
+            background: rgba(0, 184, 148, 0.2);
+            color: var(--success);
+        }
+
+        .status-inactive {
+            background: rgba(148, 163, 184, 0.2);
+            color: var(--text-light);
+        }
+
+        .btn {
+            background: var(--primary);
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            box-shadow: var(--shadow);
+        }
+
+        .btn:hover {
+            background: var(--primary-light);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Notification Settings */
+        .notification-categories {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .notification-category h4 {
+            font-size: 16px;
+            margin-bottom: 15px;
+            color: var(--text-light);
+        }
+
+        .notification-items {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .notification-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: var(--border-radius);
+        }
+
+        .notification-info h5 {
+            font-size: 15px;
+            margin-bottom: 5px;
+        }
+
+        .notification-info p {
+            font-size: 14px;
+            color: var(--text-light);
+        }
+
+        /* Toggle Switch */
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.2);
+            transition: var(--transition);
+            border-radius: 34px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: var(--transition);
+            border-radius: 50%;
+        }
+
+        input:checked + .toggle-slider {
+            background-color: var(--primary);
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(26px);
+        }
+
+        /* Preferences Settings */
+        .preferences-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .preference-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            transition: var(--transition);
+        }
+
+        .preference-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .preference-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .preference-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(108, 92, 231, 0.2);
+            color: var(--primary);
+        }
+
+        .preference-header h4 {
+            font-size: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 12px 15px;
+            border-radius: var(--border-radius);
+            color: var(--text);
+            font-size: 16px;
+            outline: none;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            border-color: var(--primary);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        /* Billing Settings */
+        .billing-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .billing-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            transition: var(--transition);
+        }
+
+        .billing-card:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .billing-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .billing-header h4 {
+            font-size: 16px;
+        }
+
+        .billing-amount {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .billing-period {
+            color: var(--text-light);
+            font-size: 14px;
+        }
+
+        .billing-features {
+            margin: 20px 0;
+        }
+
+        .billing-feature {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .billing-feature i {
+            color: var(--success);
+        }
+
+        /* System Settings */
+        .system-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .system-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            transition: var(--transition);
+        }
+
+        .system-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .system-item h4 {
+            font-size: 14px;
+            color: var(--text-light);
+            margin-bottom: 10px;
+        }
+
+        .system-item p {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        /* Danger Zone */
+        .danger-zone {
+            border: 1px solid rgba(225, 112, 85, 0.3);
+            border-radius: var(--border-radius);
+            padding: 25px;
+            background: rgba(225, 112, 85, 0.05);
+        }
+
+        .danger-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .danger-header i {
+            color: var(--danger);
+        }
+
+        .danger-header h3 {
+            color: var(--danger);
+        }
+
+        .danger-content p {
+            color: var(--text-light);
+            margin-bottom: 20px;
+        }
+
+        .danger-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn-danger {
+            background: var(--danger);
+        }
+
+        .btn-danger:hover {
+            background: #d35400;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1100px) {
+            .preferences-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .billing-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                padding: 15px 0;
+            }
+            
+            .nav-links {
+                display: flex;
+                overflow-x: auto;
+                margin-top: 15px;
+            }
+            
+            .nav-links li {
+                margin-bottom: 0;
+                flex-shrink: 0;
+            }
+            
+            .nav-links a {
+                border-left: none;
+                border-bottom: 3px solid transparent;
+                padding: 10px 15px;
+            }
+            
+            .nav-links a:hover, .nav-links a.active {
+                border-left-color: transparent;
+                border-bottom-color: var(--primary);
+            }
+            
+            .settings-nav {
+                flex-wrap: wrap;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .security-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .security-status {
+                align-self: flex-end;
+            }
+            
+            .system-info {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo">
+                <i class="fas fa-calculator"></i>
+                <h1>CA Dashboard</h1>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li><a href="analysis.html"><i class="fas fa-chart-line"></i> Analytics</a></li>
+                <li><a href="client.html"><i class="fas fa-users"></i> Clients</a></li>
+                <li><a href="invoices.html"><i class="fas fa-file-invoice-dollar"></i> Invoices</a></li>
+                <li><a href="expenses.html"><i class="fas fa-receipt"></i> Expenses</a></li>
+                <li><a href="tax_filing.html"><i class="fas fa-taxi"></i> Tax Filing</a></li>
+                <li><a href="setting.html" class="active"><i class="fas fa-cog"></i> Settings</a></li>
+                <li><a href="help.html"><i class="fas fa-question-circle"></i> Help</a></li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Header -->
+            <div class="header">
+                <h2>Settings</h2>
+                <div class="user-info">
+                    <div>
+                        <h4>John Doe, CA</h4>
+                        <p>Chartered Accountant</p>
+                    </div>
+                    <img src="https://i.pravatar.cc/150?img=12" alt="User">
+                </div>
+            </div>
+
+            <!-- Settings Navigation -->
+            <div class="settings-nav">
+                <button data-tab="security">
+                    <i class="fas fa-shield-alt"></i> Security
+                </button>
+                <button data-tab="notifications">
+                    <i class="fas fa-bell"></i> Notifications
+                </button>
+                <button data-tab="preferences">
+                    <i class="fas fa-sliders-h"></i> Preferences
+                </button>
+                <button data-tab="billing">
+                    <i class="fas fa-credit-card"></i> Billing
+                </button>
+                <button data-tab="system">
+                    <i class="fas fa-cogs"></i> System
+                </button>
+            </div>
+
+            <!-- Settings Content -->
+            <div class="settings-content">
+                <!-- Security Settings -->
+                <div class="settings-section" id="security-tab">
+                    <div class="section-header">
+                        <h3><i class="fas fa-shield-alt"></i> Security Settings</h3>
+                        <button class="btn">
+                            <i class="fas fa-save"></i> Save Changes
+                        </button>
+                    </div>
+                    <div class="security-items">
+                        <div class="security-item">
+                            <div class="security-info">
+                                <div class="security-icon">
+                                    <i class="fas fa-lock"></i>
+                                </div>
+                                <div class="security-details">
+                                    <h4>Password Protection</h4>
+                                    <p>Last changed 3 months ago - Strong password detected</p>
+                                </div>
+                            </div>
+                            <div class="security-status">
+                                <span class="status-badge status-active">Active</span>
+                                <button class="btn btn-secondary">Change Password</button>
+                            </div>
+                        </div>
+                        <div class="security-item">
+                            <div class="security-info">
+                                <div class="security-icon">
+                                    <i class="fas fa-mobile-alt"></i>
+                                </div>
+                                <div class="security-details">
+                                    <h4>Two-Factor Authentication</h4>
+                                    <p>Add an extra layer of security to your account with 2FA</p>
+                                </div>
+                            </div>
+                            <div class="security-status">
+                                <span class="status-badge status-inactive">Inactive</span>
+                                <button class="btn">Enable 2FA</button>
+                            </div>
+                        </div>
+                        <div class="security-item">
+                            <div class="security-info">
+                                <div class="security-icon">
+                                    <i class="fas fa-desktop"></i>
+                                </div>
+                                <div class="security-details">
+                                    <h4>Active Sessions</h4>
+                                    <p>Currently logged in on 3 devices - Review and manage sessions</p>
+                                </div>
+                            </div>
+                            <div class="security-status">
+                                <span class="status-badge status-active">3 Devices</span>
+                                <button class="btn btn-secondary">Manage Sessions</button>
+                            </div>
+                        </div>
+                        <div class="security-item">
+                            <div class="security-info">
+                                <div class="security-icon">
+                                    <i class="fas fa-history"></i>
+                                </div>
+                                <div class="security-details">
+                                    <h4>Login History & Activity</h4>
+                                    <p>Monitor account access and review recent login attempts</p>
+                                </div>
+                            </div>
+                            <div class="security-status">
+                                <span class="status-badge status-active">Updated</span>
+                                <button class="btn btn-secondary">View History</button>
+                            </div>
+                        </div>
+                        <div class="security-item">
+                            <div class="security-info">
+                                <div class="security-icon">
+                                    <i class="fas fa-shield-check"></i>
+                                </div>
+                                <div class="security-details">
+                                    <h4>Security Questions</h4>
+                                    <p>Set up security questions for account recovery purposes</p>
+                                </div>
+                            </div>
+                            <div class="security-status">
+                                <span class="status-badge status-inactive">Not Set</span>
+                                <button class="btn">Set Questions</button>
+                            </div>
+                        </div>
+                        <div class="security-item">
+                            <div class="security-info">
+                                <div class="security-icon">
+                                    <i class="fas fa-envelope"></i>
+                                </div>
+                                <div class="security-details">
+                                    <h4>Security Email Notifications</h4>
+                                    <p>Receive immediate alerts for suspicious activities and logins</p>
+                                </div>
+                            </div>
+                            <div class="security-status">
+                                <span class="status-badge status-active">Enabled</span>
+                                <button class="btn btn-secondary">Configure</button>
+                            </div>
+                        </div>
+                        <div class="security-item">
+                            <div class="security-info">
+                                <div class="security-icon">
+                                    <i class="fas fa-fingerprint"></i>
+                                </div>
+                                <div class="security-details">
+                                    <h4>Biometric Authentication</h4>
+                                    <p>Enable fingerprint or face recognition for mobile access</p>
+                                </div>
+                            </div>
+                            <div class="security-status">
+                                <span class="status-badge status-inactive">Available</span>
+                                <button class="btn">Enable</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Notification Settings -->
+                <div class="settings-section" id="notifications-tab" style="display: none;">
+                    <div class="section-header">
+                        <h3><i class="fas fa-bell"></i> Notification Settings</h3>
+                        <button class="btn">
+                            <i class="fas fa-save"></i> Save Changes
+                        </button>
+                    </div>
+                    <div class="notification-categories">
+                        <div class="notification-category">
+                            <h4>Email Notifications</h4>
+                            <div class="notification-items">
+                                <div class="notification-item">
+                                    <div class="notification-info">
+                                        <h5>Client Updates & Activities</h5>
+                                        <p>Get notified when clients update their information, upload documents, or complete tasks</p>
+                                    </div>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" checked>
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                                <div class="notification-item">
+                                    <div class="notification-info">
+                                        <h5>Invoice & Payment Reminders</h5>
+                                        <p>Receive reminders for upcoming invoice due dates and overdue payments</p>
+                                    </div>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" checked>
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                                <div class="notification-item">
+                                    <div class="notification-info">
+                                        <h5>Tax Filing Deadlines</h5>
+                                        <p>Alerts for upcoming tax filing deadlines and compliance requirements</p>
+                                    </div>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" checked>
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                                <div class="notification-item">
+                                    <div class="notification-info">
+                                        <h5>Payment Receipts & Confirmations</h5>
+                                        <p>Notifications when clients make payments on invoices</p>
+                                    </div>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" checked>
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="notification-category">
+                            <h4>Push Notifications</h4>
+                            <div class="notification-items">
+                                <div class="notification-item">
+                                    <div class="notification-info">
+                                        <h5>New Client Messages</h5>
+                                        <p>Instant notifications when you receive new messages from clients</p>
+                                    </div>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                                <div class="notification-item">
+                                    <div class="notification-info">
+                                        <h5>System Updates & Maintenance</h5>
+                                        <p>Important updates about the system, new features, and scheduled maintenance</p>
+                                    </div>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" checked>
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                                <div class="notification-item">
+                                    <div class="notification-info">
+                                        <h5>Security Alerts</h5>
+                                        <p>Immediate alerts for security-related activities, logins, and suspicious behavior</p>
+                                    </div>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" checked>
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                                <div class="notification-item">
+                                    <div class="notification-info">
+                                        <h5>Daily Activity Summary</h5>
+                                        <p>Daily digest of activities, new invoices, payments, and important updates</p>
+                                    </div>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="notification-category">
+                            <h4>SMS Notifications</h4>
+                            <div class="notification-items">
+                                <div class="notification-item">
+                                    <div class="notification-info">
+                                        <h5>Urgent System Alerts</h5>
+                                        <p>Critical alerts for system outages, security breaches, or emergency maintenance</p>
+                                    </div>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" checked>
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                                <div class="notification-item">
+                                    <div class="notification-info">
+                                        <h5>Large Payment Confirmations</h5>
+                                        <p>SMS confirmation for payments exceeding ₹5,000</p>
+                                    </div>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                                <div class="notification-item">
+                                    <div class="notification-info">
+                                        <h5>Critical Tax Deadlines</h5>
+                                        <p>Reminders for critical tax filing deadlines within 24 hours</p>
+                                    </div>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" checked>
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="notification-category">
+                            <h4>Desktop Notifications</h4>
+                            <div class="notification-items">
+                                <div class="notification-item">
+                                    <div class="notification-info">
+                                        <h5>Real-time Client Activities</h5>
+                                        <p>Desktop alerts for real-time client activities and updates</p>
+                                    </div>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" checked>
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                                <div class="notification-item">
+                                    <div class="notification-info">
+                                        <h5>Meeting Reminders</h5>
+                                        <p>Desktop notifications for upcoming client meetings and appointments</p>
+                                    </div>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Preferences Settings -->
+                <div class="settings-section" id="preferences-tab" style="display: none;">
+                    <div class="section-header">
+                        <h3><i class="fas fa-sliders-h"></i> Preferences</h3>
+                        <button class="btn">
+                            <i class="fas fa-save"></i> Save Changes
+                        </button>
+                    </div>
+                    <div class="preferences-grid">
+                        <div class="preference-item">
+                            <div class="preference-header">
+                                <div class="preference-icon">
+                                    <i class="fas fa-globe"></i>
+                                </div>
+                                <h4>Language & Region</h4>
+                            </div>
+                            <div class="form-group">
+                                <label for="language">Language</label>
+                                <select id="language" class="form-control">
+                                    <option value="en" selected>English</option>
+                                    <option value="es">Spanish</option>
+                                    <option value="fr">French</option>
+                                    <option value="de">German</option>
+                                    <option value="zh">Chinese</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="timezone">Timezone</label>
+                                <select id="timezone" class="form-control">
+                                    <option value="est" selected>Eastern Time (ET)</option>
+                                    <option value="cst">Central Time (CT)</option>
+                                    <option value="pst">Pacific Time (PT)</option>
+                                    <option value="gmt">Greenwich Mean Time (GMT)</option>
+                                    <option value="ist">India Standard Time (IST)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="dateFormat">Date Format</label>
+                                <select id="dateFormat" class="form-control">
+                                    <option value="mm/dd/yyyy" selected>MM/DD/YYYY</option>
+                                    <option value="dd/mm/yyyy">DD/MM/YYYY</option>
+                                    <option value="yyyy-mm-dd">YYYY-MM-DD</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="currency">Default Currency</label>
+                                <select id="currency" class="form-control">
+                                    <option value="usd" selected>USD (₹)</option>
+                                    <option value="eur">EUR (€)</option>
+                                    <option value="gbp">GBP (£)</option>
+                                    <option value="inr">INR (₹)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="preference-item">
+                            <div class="preference-header">
+                                <div class="preference-icon">
+                                    <i class="fas fa-palette"></i>
+                                </div>
+                                <h4>Appearance & Display</h4>
+                            </div>
+                            <div class="form-group">
+                                <label for="theme">Theme</label>
+                                <select id="theme" class="form-control">
+                                    <option value="dark" selected>Dark</option>
+                                    <option value="light">Light</option>
+                                    <option value="auto">Auto (System)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="density">Display Density</label>
+                                <select id="density" class="form-control">
+                                    <option value="comfortable" selected>Comfortable</option>
+                                    <option value="compact">Compact</option>
+                                    <option value="spacious">Spacious</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="fontSize">Font Size</label>
+                                <select id="fontSize" class="form-control">
+                                    <option value="small">Small</option>
+                                    <option value="medium" selected>Medium</option>
+                                    <option value="large">Large</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="animations">Animations</label>
+                                <select id="animations" class="form-control">
+                                    <option value="enabled" selected>Enabled</option>
+                                    <option value="reduced">Reduced</option>
+                                    <option value="disabled">Disabled</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="preference-item">
+                            <div class="preference-header">
+                                <div class="preference-icon">
+                                    <i class="fas fa-file-invoice"></i>
+                                </div>
+                                <h4>Invoice & Billing</h4>
+                            </div>
+                            <div class="form-group">
+                                <label for="invoicePrefix">Invoice Prefix</label>
+                                <input type="text" id="invoicePrefix" class="form-control" value="INV">
+                            </div>
+                            <div class="form-group">
+                                <label for="dueDays">Default Due Days</label>
+                                <input type="number" id="dueDays" class="form-control" value="30" min="1" max="90">
+                            </div>
+                            <div class="form-group">
+                                <label for="invoiceTemplate">Default Template</label>
+                                <select id="invoiceTemplate" class="form-control">
+                                    <option value="professional" selected>Professional</option>
+                                    <option value="modern">Modern</option>
+                                    <option value="minimal">Minimal</option>
+                                    <option value="corporate">Corporate</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="autoReminders">Auto Payment Reminders</label>
+                                <select id="autoReminders" class="form-control">
+                                    <option value="enabled" selected>Enabled</option>
+                                    <option value="disabled">Disabled</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="preference-item">
+                            <div class="preference-header">
+                                <div class="preference-icon">
+                                    <i class="fas fa-taxi"></i>
+                                </div>
+                                <h4>Tax & Compliance</h4>
+                            </div>
+                            <div class="form-group">
+                                <label for="defaultTax">Default Tax Rate (%)</label>
+                                <input type="number" id="defaultTax" class="form-control" value="10.0" step="0.1" min="0" max="50">
+                            </div>
+                            <div class="form-group">
+                                <label for="taxYear">Tax Year Start</label>
+                                <select id="taxYear" class="form-control">
+                                    <option value="january" selected>January</option>
+                                    <option value="april">April</option>
+                                    <option value="july">July</option>
+                                    <option value="october">October</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="taxInclusive">Tax Display</label>
+                                <select id="taxInclusive" class="form-control">
+                                    <option value="exclusive" selected>Show Tax Exclusive</option>
+                                    <option value="inclusive">Show Tax Inclusive</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="complianceAlerts">Compliance Alerts</label>
+                                <select id="complianceAlerts" class="form-control">
+                                    <option value="enabled" selected>Enabled</option>
+                                    <option value="disabled">Disabled</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Billing Settings -->
+                <div class="settings-section" id="billing-tab" style="display: none;">
+                    <div class="section-header">
+                        <h3><i class="fas fa-credit-card"></i> Billing & Subscription</h3>
+                        <button class="btn">
+                            <i class="fas fa-sync-alt"></i> Upgrade Plan
+                        </button>
+                    </div>
+                    <div class="billing-cards">
+                        <div class="billing-card">
+                            <div class="billing-header">
+                                <h4>Professional Plan</h4>
+                                <span class="status-badge status-active">Active</span>
+                            </div>
+                            <div class="billing-amount">₹49<span class="billing-period">/month</span></div>
+                            <p>Perfect for individual Chartered Accountants</p>
+                            <div class="billing-features">
+                                <div class="billing-feature">
+                                    <i class="fas fa-check"></i>
+                                    <span>Up to 50 Clients</span>
+                                </div>
+                                <div class="billing-feature">
+                                    <i class="fas fa-check"></i>
+                                    <span>Unlimited Invoices</span>
+                                </div>
+                                <div class="billing-feature">
+                                    <i class="fas fa-check"></i>
+                                    <span>Tax Filing Support</span>
+                                </div>
+                                <div class="billing-feature">
+                                    <i class="fas fa-check"></i>
+                                    <span>Basic Analytics & Reports</span>
+                                </div>
+                                <div class="billing-feature">
+                                    <i class="fas fa-check"></i>
+                                    <span>Email & Chat Support</span>
+                                </div>
+                                <div class="billing-feature">
+                                    <i class="fas fa-check"></i>
+                                    <span>Mobile App Access</span>
+                                </div>
+                            </div>
+                            <button class="btn btn-secondary" style="width: 100%; margin-top: 15px;">Manage Plan</button>
+                        </div>
+                        <div class="billing-card">
+                            <div class="billing-header">
+                                <h4>Firm Plan</h4>
+                                <span class="status-badge status-inactive">Upgrade</span>
+                            </div>
+                            <div class="billing-amount">₹99<span class="billing-period">/month</span></div>
+                            <p>Ideal for accounting firms with multiple users</p>
+                            <div class="billing-features">
+                                <div class="billing-feature">
+                                    <i class="fas fa-check"></i>
+                                    <span>Unlimited Clients</span>
+                                </div>
+                                <div class="billing-feature">
+                                    <i class="fas fa-check"></i>
+                                    <span>Multi-user Access (Up to 5 users)</span>
+                                </div>
+                                <div class="billing-feature">
+                                    <i class="fas fa-check"></i>
+                                    <span>Advanced Analytics & Custom Reports</span>
+                                </div>
+                                <div class="billing-feature">
+                                    <i class="fas fa-check"></i>
+                                    <span>Priority Phone & Email Support</span>
+                                </div>
+                                <div class="billing-feature">
+                                    <i class="fas fa-check"></i>
+                                    <span>White-label Options</span>
+                                </div>
+                                <div class="billing-feature">
+                                    <i class="fas fa-check"></i>
+                                    <span>API Access & Integrations</span>
+                                </div>
+                            </div>
+                            <button class="btn" style="width: 100%; margin-top: 15px;">Upgrade Now</button>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="paymentMethod">Payment Method</label>
+                            <select id="paymentMethod" class="form-control">
+                                <option value="credit" selected>Credit Card ending in 4242</option>
+                                <option value="paypal">PayPal</option>
+                                <option value="bank">Bank Transfer</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="billingCycle">Billing Cycle</label>
+                            <select id="billingCycle" class="form-control">
+                                <option value="monthly" selected>Monthly</option>
+                                <option value="annual">Annual (Save 20%)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="billingEmail">Billing Email</label>
+                        <input type="email" id="billingEmail" class="form-control" value="billing@doeassociates.com">
+                    </div>
+                    <div class="form-group">
+                        <label>Billing History</label>
+                        <div style="background: rgba(255, 255, 255, 0.05); border-radius: var(--border-radius); padding: 15px;">
+                            <div style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.1);">
+                                <span>November 2023</span>
+                                <span>₹49.00</span>
+                                <span class="status-badge status-active">Paid</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.1);">
+                                <span>October 2023</span>
+                                <span>₹49.00</span>
+                                <span class="status-badge status-active">Paid</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; padding: 10px 0;">
+                                <span>September 2023</span>
+                                <span>₹49.00</span>
+                                <span class="status-badge status-active">Paid</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- System Settings -->
+                <div class="settings-section" id="system-tab" style="display: none;">
+                    <div class="section-header">
+                        <h3><i class="fas fa-cogs"></i> System Settings</h3>
+                        <button class="btn">
+                            <i class="fas fa-save"></i> Save Changes
+                        </button>
+                    </div>
+                    <div class="system-info">
+                        <div class="system-item">
+                            <h4>App Version</h4>
+                            <p>v2.4.1</p>
+                        </div>
+                        <div class="system-item">
+                            <h4>Last Updated</h4>
+                            <p>Nov 15, 2023</p>
+                        </div>
+                        <div class="system-item">
+                            <h4>Database Size</h4>
+                            <p>245 MB</p>
+                        </div>
+                        <div class="system-item">
+                            <h4>Backup Status</h4>
+                            <p>Active</p>
+                        </div>
+                        <div class="system-item">
+                            <h4>Storage Used</h4>
+                            <p>156 MB / 5 GB</p>
+                        </div>
+                        <div class="system-item">
+                            <h4>API Status</h4>
+                            <p>Operational</p>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="autoBackup">Auto Backup Frequency</label>
+                            <select id="autoBackup" class="form-control">
+                                <option value="daily" selected>Daily</option>
+                                <option value="weekly">Weekly</option>
+                                <option value="monthly">Monthly</option>
+                                <option value="never">Never</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="dataRetention">Data Retention Period</label>
+                            <select id="dataRetention" class="form-control">
+                                <option value="1year">1 Year</option>
+                                <option value="3years" selected>3 Years</option>
+                                <option value="5years">5 Years</option>
+                                <option value="forever">Forever</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="sessionTimeout">Session Timeout</label>
+                        <select id="sessionTimeout" class="form-control">
+                            <option value="15">15 minutes</option>
+                            <option value="30" selected>30 minutes</option>
+                            <option value="60">1 hour</option>
+                            <option value="120">2 hours</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="cacheSettings">Cache Settings</label>
+                        <select id="cacheSettings" class="form-control">
+                            <option value="enabled" selected>Enabled</option>
+                            <option value="disabled">Disabled</option>
+                        </select>
+                    </div>
+                    <div class="danger-zone">
+                        <div class="danger-header">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <h3>Danger Zone</h3>
+                        </div>
+                        <div class="danger-content">
+                            <p>Once you delete your account, there is no going back. Please be certain.</p>
+                            <div class="danger-actions">
+                                <button class="btn btn-secondary">
+                                    <i class="fas fa-download"></i> Export All Data
+                                </button>
+                                <button class="btn btn-danger">
+                                    <i class="fas fa-trash"></i> Delete Account
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab navigation functionality
+        const tabButtons = document.querySelectorAll('.settings-nav button');
+        const tabContents = document.querySelectorAll('.settings-section');
+
+        // Set first tab as active by default
+        tabButtons[0].classList.add('active');
+
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const tabId = button.getAttribute('data-tab');
+                
+                // Update active tab button
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                
+                // Show corresponding tab content
+                tabContents.forEach(content => {
+                    content.style.display = 'none';
+                });
+                document.getElementById(`₹{tabId}-tab`).style.display = 'block';
+            });
+        });
+
+        // Form submission handlers
+        document.querySelectorAll('.btn:contains("Save Changes")').forEach(button => {
+            button.addEventListener('click', () => {
+                alert('Settings saved successfully!');
+            });
+        });
+
+        // Security settings functionality
+        document.querySelector('.btn:contains("Change Password")').addEventListener('click', function() {
+            const newPassword = prompt('Enter new password:');
+            if (newPassword) {
+                alert('Password changed successfully!');
+            }
+        });
+
+        document.querySelector('.btn:contains("Enable 2FA")').addEventListener('click', function() {
+            if (confirm('Do you want to enable two-factor authentication?')) {
+                this.textContent = 'Disable 2FA';
+                this.previousElementSibling.textContent = 'Active';
+                this.previousElementSibling.className = 'status-badge status-active';
+                alert('Two-factor authentication has been enabled!');
+            }
+        });
+
+        // Billing functionality
+        document.querySelector('.btn:contains("Upgrade Plan")').addEventListener('click', function() {
+            alert('Redirecting to plan upgrade page...');
+        });
+
+        // System functionality
+        document.querySelector('.btn:contains("Export All Data")').addEventListener('click', function() {
+            alert('Your data export has been started. You will receive an email when it is ready for download.');
+        });
+
+        document.querySelector('.btn-danger').addEventListener('click', function() {
+            if (confirm('Are you absolutely sure you want to delete your account? This action cannot be undone.')) {
+                alert('Account deletion scheduled. You will receive a confirmation email.');
+            }
+        });
+    </script>
+</body>
+</html>
